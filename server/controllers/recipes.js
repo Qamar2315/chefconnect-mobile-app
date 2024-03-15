@@ -8,52 +8,125 @@ const getRecipes = asyncHandler(async (req, res) => {
     if (recipes) {
         res.status(200).json({
             success: true,
-            data: constituents
+            data: recipes
         });
     }else{
         throw new AppError("Internal Server Error",400)
     }
 })
 
-// const addConstituent = asyncHandler(async (req, res) => {
-//     const { email, name, address } = req.body;
-//     // Check if a constituent with the same email exists
-//     let existingConstituent = await Constituent.findOne({ email });
+const addRecipe = asyncHandler(async (req, res) => {
+    const { title, description, ingredients, instructions, cookingTime, servings, author, category, tags } = req.body;
+    
+    // Check if a recipe with the same title exists
+    let existingRecipe = await Recipe.findOne({ title });
 
-//     if (existingConstituent) {
-//         // If a constituent with the same email exists, merge data
-//         existingConstituent.name = name || existingConstituent.name;
-//         existingConstituent.address = address || existingConstituent.address;
+    if (existingRecipe) {
+        // If a recipe with the same title exists, update data
+        existingRecipe.title = title || existingRecipe.title;
+        existingRecipe.description = description || existingRecipe.description;
+        existingRecipe.ingredients = ingredients || existingRecipe.ingredients;
+        existingRecipe.instructions = instructions || existingRecipe.instructions;
+        existingRecipe.cookingTime = cookingTime || existingRecipe.cookingTime;
+        existingRecipe.servings = servings || existingRecipe.servings;
+        existingRecipe.category = category || existingRecipe.category;
+        existingRecipe.tags = tags || existingRecipe.tags;
+        existingRecipe.updatedAt = Date.now();
 
-//         // Save the updated constituent
-//         await existingConstituent.save();
+        // Save the updated recipe
+        await existingRecipe.save();
 
-//         res.status(200).json({
-//             success: true,
-//             message: 'Constituent data updated successfully',
-//             data: existingConstituent
-//         });
-//     } else {
-//         // If no constituent with the same email exists, create a new one
-//         const newConstituent = new Constituent({
-//             email,
-//             name,
-//             address
-//         });
+        res.status(200).json({
+            success: true,
+            message: 'Recipe data updated successfully',
+            data: existingRecipe
+        });
+    } else {
+        // If no recipe with the same title exists, create a new one
+        const newRecipe = new Recipe({
+            title,
+            description,
+            ingredients,
+            instructions,
+            cookingTime,
+            servings,
+            author,
+            category,
+            tags
+        });
 
-//         // Save the new constituent
-//         await newConstituent.save();
+        // Save the new recipe
+        await newRecipe.save();
 
-//         res.status(201).json({
-//             success: true,
-//             message: 'Constituent added successfully',
-//             data: newConstituent
-//         });
-//     }
-// });
+        res.status(201).json({
+            success: true,
+            message: 'Recipe added successfully',
+            data: newRecipe
+        });
+    }
+});
 
 
+const updateRecipe = asyncHandler(async (req, res) => {
+    const { id } = req.params; // Get recipe ID from request parameters
+    const { title, description, ingredients, instructions, cookingTime, servings, category, tags } = req.body;
+    
+    // Check if the recipe with the given ID exists
+    let recipe = await Recipe.findById(id);
+
+    if (!recipe) {
+        return res.status(404).json({
+            success: false,
+            message: 'Recipe not found'
+        });
+    }
+
+    // Update recipe fields
+    recipe.title = title || recipe.title;
+    recipe.description = description || recipe.description;
+    recipe.ingredients = ingredients || recipe.ingredients;
+    recipe.instructions = instructions || recipe.instructions;
+    recipe.cookingTime = cookingTime || recipe.cookingTime;
+    recipe.servings = servings || recipe.servings;
+    recipe.category = category || recipe.category;
+    recipe.tags = tags || recipe.tags;
+    recipe.updatedAt = Date.now();
+
+    // Save the updated recipe
+    await recipe.save();
+
+    res.status(200).json({
+        success: true,
+        message: 'Recipe updated successfully',
+        data: recipe
+    });
+});
+
+const deleteRecipe = asyncHandler(async (req, res) => {
+    const { id } = req.params; // Get recipe ID from request parameters
+    
+    // Check if the recipe with the given ID exists
+    let recipe = await Recipe.findById(id);
+
+    if (!recipe) {
+        return res.status(404).json({
+            success: false,
+            message: 'Recipe not found'
+        });
+    }
+
+    // Delete the recipe
+    await recipe.remove();
+
+    res.status(200).json({
+        success: true,
+        message: 'Recipe deleted successfully'
+    });
+});
 
 module.exports = {
-    getRecipes
+    getRecipes,
+    addRecipe,
+    updateRecipe,
+    deleteRecipe
 }

@@ -5,6 +5,8 @@ const cors = require("cors");
 const mongoose = require('mongoose');
 const { notFound, errorHandler } = require('./middlewares/ErrorHandler');
 const recipeRoutes = require('./routes/recipes');
+const dotenv= require('dotenv')
+dotenv.config(); // Load environment variables from .env file
 
 // From environment variables
 const PORT = process.env.PORT || 45200;

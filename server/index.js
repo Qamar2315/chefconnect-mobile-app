@@ -5,6 +5,7 @@ const cors = require("cors");
 const mongoose = require('mongoose');
 const { notFound, errorHandler } = require('./middlewares/ErrorHandler');
 const recipeRoutes = require('./routes/recipes');
+const userRoutes = require('./routes/users');
 const dotenv= require('dotenv')
 dotenv.config(); // Load environment variables from .env file
 
@@ -19,6 +20,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routers
 app.use('/api/recipes', recipeRoutes);
+app.use('/api/users', userRoutes);
 
 // Error middlewares
 app.use(notFound);

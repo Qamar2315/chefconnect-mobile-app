@@ -10,14 +10,34 @@ const getRecipes = asyncHandler(async (req, res) => {
             success: true,
             data: recipes
         });
-    }else{
-        throw new AppError("Internal Server Error",400)
+    } else {
+        throw new AppError("Internal Server Error", 400)
     }
 })
 
+const getRecipeById = asyncHandler(async (req, res) => {
+    const { id } = req.params; // Get recipe ID from request parameters
+
+    // Fetch the recipe from the database using the ID
+    const recipe = await Recipe.findById(id);
+
+    if (!recipe) {
+        return res.status(404).json({
+            success: false,
+            message: 'Recipe not found'
+        });
+    }
+
+    res.status(200).json({
+        success: true,
+        data: recipe
+    });
+});
+
+
 const addRecipe = asyncHandler(async (req, res) => {
     const { title, description, ingredients, instructions, cookingTime, servings, author, category, tags } = req.body;
-    
+
     // Check if a recipe with the same title exists
     let existingRecipe = await Recipe.findOne({ title });
 
@@ -70,7 +90,7 @@ const addRecipe = asyncHandler(async (req, res) => {
 const updateRecipe = asyncHandler(async (req, res) => {
     const { id } = req.params; // Get recipe ID from request parameters
     const { title, description, ingredients, instructions, cookingTime, servings, category, tags } = req.body;
-    
+
     // Check if the recipe with the given ID exists
     let recipe = await Recipe.findById(id);
 
@@ -104,7 +124,7 @@ const updateRecipe = asyncHandler(async (req, res) => {
 
 const deleteRecipe = asyncHandler(async (req, res) => {
     const { id } = req.params; // Get recipe ID from request parameters
-    
+
     // Check if the recipe with the given ID exists
     let recipe = await Recipe.findById(id);
 
@@ -128,5 +148,6 @@ module.exports = {
     getRecipes,
     addRecipe,
     updateRecipe,
-    deleteRecipe
+    deleteRecipe,
+    getRecipeById
 }

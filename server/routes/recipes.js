@@ -1,18 +1,11 @@
-const express= require('express');
-const router= express.Router();
-const {getRecipes} = require('../controllers/recipes');
-// 
-// const {addConstituent,getConstituents,checkDuplicates,generateCsv} = require('../controllers/constituents');
-// const {validateConstituent} = require('../middlewares/schemaValidator')
+const express = require('express');
+const router = express.Router();
+const { getRecipes, getRecipeById } = require('../controllers/recipes');
 
 router.route('/')
     .get(getRecipes)
-    // .post(validateConstituent,addConstituent)
 
 router.route('/:id')
-    .get()
+    .get(getRecipeById)
 
-// router.route('/export')
-//     .get(generateCsv)
-
-module.exports=router
+module.exports = router;

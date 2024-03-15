@@ -1,7 +1,7 @@
 const express= require('express');
 const router= express.Router();
-const {addConstituent,getConstituents,checkDuplicates,generateCsv} = require('../controllers/constituents');
-
+const {getRecipes} = require('../controllers/recipes');
+// 
 // const {addConstituent,getConstituents,checkDuplicates,generateCsv} = require('../controllers/constituents');
 // const {validateConstituent} = require('../middlewares/schemaValidator')
 

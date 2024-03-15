@@ -9,8 +9,8 @@ router.route('/')
     .get(getRecipes)
     // .post(validateConstituent,addConstituent)
 
-// router.route('/check_duplicates')
-//     .get(checkDuplicates)
+router.route('/:id')
+    .get()
 
 // router.route('/export')
 //     .get(generateCsv)

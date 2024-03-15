@@ -12,10 +12,10 @@ router.route('/login')
     .post(validateLogin, loginUser)
 
 router.route('/:userId')
-    .get(getProfile)
+    .get(isLogin, getProfile)
     .put(isLogin, isProfileAuthor, updateProfile)
 
 router.route('/:userId/update-password')
-    .post(isLogin, isProfileAuthor, changePassword)
+    .put(isLogin, isProfileAuthor, changePassword)
 
 module.exports = router;

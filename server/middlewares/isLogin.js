@@ -11,13 +11,12 @@ const isLogin = asyncHandler(async (req, res, next) => {
     ) {
         try {
             token = req.headers.authorization.split(" ")[1];
-            const decoded = jwt.verify(token, "hi");
+            const decoded = jwt.verify(token, "SECURITY_INFORMATION_FOR_SESSION");
             if (decoded._id && decoded.name && decoded.email) {
                 const user = await User.findById(decoded._id);
                 if (!user) {
                     throw new AppError("NOT AUTHORIZED, TOKEN FAILED!", 201);
                 }
-                console.log(decoded);
                 req.user = decoded;
                 next();
             }else{

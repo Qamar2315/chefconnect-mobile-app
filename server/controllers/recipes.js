@@ -1,5 +1,6 @@
 const asyncHandler = require('../utilities/CatchAsync')
 const Recipe = require('../model/recipe')
+const Review = require('../model/review')
 const AppError = require('../utilities/AppError')
 
 const getRecipes = asyncHandler(async (req, res) => {
@@ -19,7 +20,15 @@ const getRecipeById = asyncHandler(async (req, res) => {
     const { id } = req.params; // Get recipe ID from request parameters
 
     // Fetch the recipe from the database using the ID
-    const recipe = await Recipe.findById(id);
+    const recipe = await Recipe.findById(id)
+        .populate({
+            path: 'author',
+            select: 'name email' // Specify the fields you want to populate for the author
+        })
+        .populate({
+            path: 'reviews',
+            populate: { path: 'user', select: 'name' } // Populate nested fields within reviews (assuming there's a 'user' field in reviews)
+        });
 
     if (!recipe) {
         return res.status(404).json({
@@ -36,7 +45,7 @@ const getRecipeById = asyncHandler(async (req, res) => {
 
 
 const addRecipe = asyncHandler(async (req, res) => {
-    const { title, description, ingredients, instructions, cookingTime, servings, author, category, tags } = req.body;
+    const { title, description, ingredients, instructions, cookingTime, servings, category, tags } = req.body;
 
     // Check if a recipe with the same title exists
     let existingRecipe = await Recipe.findOne({ title });
@@ -70,7 +79,7 @@ const addRecipe = asyncHandler(async (req, res) => {
             instructions,
             cookingTime,
             servings,
-            author,
+            author: req.user._id,
             category,
             tags
         });
@@ -125,24 +134,36 @@ const updateRecipe = asyncHandler(async (req, res) => {
 const deleteRecipe = asyncHandler(async (req, res) => {
     const { id } = req.params; // Get recipe ID from request parameters
 
-    // Check if the recipe with the given ID exists
-    let recipe = await Recipe.findById(id);
+    try {
+        // Check if the recipe with the given ID exists
+        const recipe = await Recipe.findById(id);
 
-    if (!recipe) {
-        return res.status(404).json({
+        if (!recipe) {
+            return res.status(404).json({
+                success: false,
+                message: 'Recipe not found'
+            });
+        }
+
+        // Delete associated reviews
+        await Review.deleteMany({ _id: { $in: recipe.reviews } });
+
+        // Delete the recipe
+        await Recipe.deleteOne({ _id: id });
+
+        res.status(200).json({
+            success: true,
+            message: 'Recipe and associated reviews deleted successfully'
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
             success: false,
-            message: 'Recipe not found'
+            message: 'Internal Server Error'
         });
     }
-
-    // Delete the recipe
-    await recipe.remove();
-
-    res.status(200).json({
-        success: true,
-        message: 'Recipe deleted successfully'
-    });
 });
+
 
 module.exports = {
     getRecipes,

@@ -22,11 +22,13 @@ const recipeSchema = new mongoose.Schema({
     type: Number,
     required: true,
     min: 0,
+    max: 120,
   },
   servings: {
     type: Number,
     required: true,
     min: 1,
+    max: 20,
   },
   author: {
     type: mongoose.Schema.Types.ObjectId,

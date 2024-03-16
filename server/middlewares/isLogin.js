@@ -18,6 +18,7 @@ const isLogin = asyncHandler(async (req, res, next) => {
                     throw new AppError("NOT AUTHORIZED, TOKEN FAILED!", 201);
                 }
                 req.user = decoded;
+                console.log(req.user);
                 next();
             }else{
                 throw new AppError("NOT AUTHORIZED, TOKEN FAILED!", 201);

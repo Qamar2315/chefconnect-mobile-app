@@ -1,8 +1,8 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { AuthProvider } from './helpers/AuthContex'; // Import your AuthProvider
-import LoginScreen from './screens/LoginScreen'
-import SignUpScreen  from './screens/signup'
+import { AuthProvider } from './src/helpers/AuthContex'; // Import your AuthProvider
+import LoginScreen from './src/screens/LoginScreen'
+import SignUpScreen  from './src/screens/signup'
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -20,12 +20,3 @@ export default function App() {
     </AuthProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

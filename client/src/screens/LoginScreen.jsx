@@ -11,8 +11,7 @@ const LoginScreen = () => {
   const handleSignIn = async () => {
     try {
       // Make sure to replace 'your_server_url' with your actual server URL
-      const response = await axios.post('http://localhost:9090/api/users/login', { email, password });
-      console.log(response.data); // Log the response from the server
+      const response = await axios.post('http://192.168.18.29:9090/api/users/login', { email, password });
       // You can navigate to another screen upon successful login
       navigation.navigate('Home');
     } catch (error) {

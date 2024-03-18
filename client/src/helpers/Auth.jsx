@@ -4,10 +4,11 @@ const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(null);
 
   const loginUser = (userData) => {
     // Logic for authenticating the user (e.g., calling an API)
-    
     setUser(userData);
   };
 
@@ -22,6 +23,8 @@ const AuthProvider = ({ children }) => {
         user,
         loginUser,
         logoutUser,
+        isLoading,
+        isLoggedIn
       }}>
       {children}
     </AuthContext.Provider>

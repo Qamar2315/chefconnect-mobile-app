@@ -1,19 +1,23 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 
 const LoginScreen = () => {
   const navigation = useNavigation();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleSignIn = async () => {
+    if  (!email || !password){
+      Alert.alert('Error', 'Enter Both Email And Password'); 
+      return;
+    }
     try {
-      // Make sure to replace 'your_server_url' with your actual server URL
-      const response = await axios.post('http://192.168.18.29:9090/api/users/login', { email, password });
-      // You can navigate to another screen upon successful login
-      navigation.navigate('Home');
+      const response = await axios.post('/api/users/login', { email, password });
+      console.log(response);
+      // navigation.navigate('Home');
     } catch (error) {
       console.error('Login error:', error);
       if (error.response) {
@@ -21,65 +25,34 @@ const LoginScreen = () => {
         console.log('Response status:', error.response.status);
         console.log('Response headers:', error.response.headers);
       }
-      Alert.alert('Error', 'Login failed. Please try again.');
+      // Alert.alert('Error', 'Login failed. Please try again.');
     }
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
+    <View className="flex-1 justify-center items-center">
+      <Text className="text-3xl mb-8">Login</Text>
       <TextInput
-        style={styles.input}
+        className="w-4/5 h-12 border border-gray-300 rounded mb-4 px-4"
         placeholder="Email"
         value={email}
         onChangeText={(text) => setEmail(text)}
       />
       <TextInput
-        style={styles.input}
+        className="w-4/5 h-12 border border-gray-300 rounded mb-4 px-4"
         placeholder="Password"
         secureTextEntry={true}
         value={password}
         onChangeText={(text) => setPassword(text)}
       />
-      <TouchableOpacity style={styles.button} onPress={handleSignIn}>
-        <Text style={styles.buttonText}>Sign In</Text>
+      <TouchableOpacity
+        className="w-4/5 h-12 bg-blue-500 rounded items-center justify-center mt-4"
+        onPress={handleSignIn}
+      >
+        <Text className="text-white text-base">Sign In</Text>
       </TouchableOpacity>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 24,
-    marginBottom: 20,
-  },
-  input: {
-    width: '80%',
-    height: 40,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    marginBottom: 10,
-    padding: 10,
-  },
-  button: {
-    width: '80%',
-    height: 40,
-    backgroundColor: 'blue',
-    borderRadius: 5,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 20,
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-  },
-});
 
 export default LoginScreen;

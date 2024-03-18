@@ -1,8 +1,7 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { AuthProvider } from './src/helpers/AuthContex'; // Import your AuthProvider
+import { AuthProvider } from './src/helpers/Auth'; // Import your AuthProvider
 import LoginScreen from './src/screens/LoginScreen'
-import SignUpScreen  from './src/screens/signup'
+import SignUpScreen  from './src/screens/SignUpScreen'
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 

@@ -36,5 +36,5 @@ async function main() {
 
 // Server
 app.listen(PORT, ipAddress, () => {
-  console.log(`APP IS LISTENING AT http://${ipAddress}:${PORT}`);
+  console.log(`APP IS LISTENING ON PORT ${PORT}`);
 })

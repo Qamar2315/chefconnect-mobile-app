@@ -57,10 +57,19 @@ const loginUser = asyncHandler(async (req, res) => {
                 }
             });
         } else {
-            throw new AppError("Wrong Email Or Password", 201)
+            res.status(201).json({
+                sucess: false,
+                message: "Wrong email or password",
+                data: {
+                }
+            });
         }
     } else {
-        throw new AppError("User Account Not Found", 201)
+        res.status(201).json({
+            sucess: false,
+            message: "Account not found",
+            data: {}
+        });
     }
 });
 

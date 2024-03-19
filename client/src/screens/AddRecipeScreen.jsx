@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { Alert } from 'react-native';
 
 const AddRecipeScreen = () => {
   const navigation = useNavigation();
@@ -14,6 +15,11 @@ const AddRecipeScreen = () => {
   const [tags, setTags] = useState('');
 
   const handleAddRecipe = () => {
+    // Check if any of the required fields is empty
+    if (!title || !description || !ingredients || !instructions || !cookingTime || !servings || !category || !tags) {
+      Alert.alert('Error', 'Please fill in all fields to add the recipe.');
+      return;
+    }
     // Here you can send the recipe data to your backend or perform any other actions
     console.log('Add Recipe:', { title, description, ingredients, instructions, cookingTime, servings, category, tags });
     // Reset the form after submission

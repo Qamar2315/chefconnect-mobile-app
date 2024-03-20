@@ -7,8 +7,8 @@ const LoginScreen = () => {
   const navigation = useNavigation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { loginUser, userSession } = useContext(AuthContext);
-  
+  const { loginUser, userSession, isLoading } = useContext(AuthContext);
+
   const handleSignIn = async () => {
     if (email.length === 0 || password.length === 0) {
       Alert.alert('Error', 'Enter Both Email And Password');

@@ -3,8 +3,11 @@ import { View, Text, ScrollView, TouchableOpacity, Image, TextInput } from 'reac
 import { useNavigation } from '@react-navigation/native';
 import { recipes } from '../../test'; // Import your recipe data or API call
 import { useState } from 'react';
+import { useRoute } from '@react-navigation/native';
 
 const ViewRecipeScreen = () => {
+    const { recipeId } = route.params;
+    console.log(recipeId);
     const navigation = useNavigation();
     const [recipe, setRecipe] = useState(recipes.find(item => item._id === "65ef197bba7ae0d7cf2adc48"));
     const [reviews, setReviews] = useState(recipe.reviews || [{rating:"5",description:"good",author:"Qamar"}]);

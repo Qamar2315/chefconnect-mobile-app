@@ -47,7 +47,7 @@ const loginUser = asyncHandler(async (req, res) => {
     if (userAccount) {
         if (await matchPass(password, userAccount.password)) {
             res.status(201).json({
-                sucess: true,
+                success: true,
                 message: "Login sucessfully",
                 data: {
                     _id: userAccount._id,
@@ -58,7 +58,7 @@ const loginUser = asyncHandler(async (req, res) => {
             });
         } else {
             res.status(201).json({
-                sucess: false,
+                success: false,
                 message: "Wrong email or password",
                 data: {
                 }

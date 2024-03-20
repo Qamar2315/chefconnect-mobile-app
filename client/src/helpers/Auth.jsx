@@ -1,30 +1,63 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
+import axios from 'axios';
+import { Alert } from 'react-native';
+import { BASE_URL } from '../../config'; // Make sure to import your BASE_URL from config
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [userSession, setUserSession] = useState(null);
   const [isLoading, setIsLoading] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(null);
 
-  const loginUser = (userData) => {
-    // Logic for authenticating the user (e.g., calling an API)
-    setUser(userData);
+  const loginUser = async (userData) => {
+    // setIsLoading(true);
+    const { email, password } = userData;
+    try {
+      const response = await axios.post(`${BASE_URL}/api/users/login`, { email, password });
+      if (!response.data.success) {
+        Alert.alert('Error', response.data.message);
+        return false;
+      } else {
+        // Login successful
+        setUserSession(response.data.data);
+        AsyncStorage.setItem('userSession', JSON.stringify(response.data.data));
+        return true;
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      Alert.alert('Error', 'Login failed. Please try again.');
+      return false;
+    }
   };
 
   const logoutUser = () => {
     // Logic for logging out the user
-    setUser(null);
+    setUserSession(null);
+    AsyncStorage.removeItem('userSession');
   };
+
+  const isLoggedIn = async () => {
+    try {
+      let session = await AsyncStorage.getItem('userSession');
+      let userData = JSON.parse(session);
+      setUserSession(userData);
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
+  useEffect(() => {
+    isLoggedIn();
+  }, []);
 
   return (
     <AuthContext.Provider
       value={{
-        user,
+        userSession,
         loginUser,
         logoutUser,
-        isLoading,
-        isLoggedIn
+        isLoggedIn,
+        isLoading
       }}>
       {children}
     </AuthContext.Provider>

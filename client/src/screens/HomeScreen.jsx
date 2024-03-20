@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, FlatList } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { recipes } from '../../test';
+import { AuthContext } from '../helpers/Auth';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
-  const [userLoggedIn, setUserLoggedIn] = useState(false); // Example state for user login status
   const [searchQuery, setSearchQuery] = useState('');
-
+  const { userSession, logoutUser } = useContext(AuthContext);
   const renderRecipeCard = ({ item }) => (
     <TouchableOpacity className="bg-white rounded-lg shadow-md p-4 m-2">
       <View className="flex items-center">
@@ -25,20 +25,26 @@ const HomeScreen = () => {
   const filteredRecipes = recipes.filter(recipe =>
     recipe.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
-
+  const handleLogout = () => {
+    logoutUser();
+  }
+  // console.log(userSession);
   return (
     <View className="flex-1">
-      {userLoggedIn ? (
+      {!!userSession ? (
         <View className="flex-row items-center justify-between px-4 py-2">
-          <Text className="text-lg font-bold">Welcome back, John!</Text> {/* Replace "John" with user's name */}
+          <Text className="text-lg font-bold">Welcome Back {userSession.data.name} </Text>
           <Image source={require('../../assets/icons/profile.png')} className="w-8 h-8 rounded-full" />
+          <TouchableOpacity className="bg-red-500 rounded-lg p-2" onPress={handleLogout}>
+            <Text className="text-white">Logout</Text>
+          </TouchableOpacity>
         </View>
       ) : (
         <View className="flex-row justify-between px-4 py-2">
-          <TouchableOpacity className="bg-blue-500 rounded-lg p-2" onPress={() => navigation.navigate('Login')}>
+          <TouchableOpacity className="bg-blue-500 rounded-lg p-2" onPress={() => navigation.navigate('login')}>
             <Text className="text-white">Login</Text>
           </TouchableOpacity>
-          <TouchableOpacity className="bg-green-500 rounded-lg p-2" onPress={() => navigation.navigate('Signup')}>
+          <TouchableOpacity className="bg-green-500 rounded-lg p-2" onPress={() => navigation.navigate('signup')}>
             <Text className="text-white">Sign Up</Text>
           </TouchableOpacity>
         </View>

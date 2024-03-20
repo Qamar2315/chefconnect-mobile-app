@@ -1,33 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
-import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
-import { BASE_URL } from '../../config'; // Make sure to import your BASE_URL from config
+import { AuthContext } from '../helpers/Auth';
 
 const LoginScreen = () => {
   const navigation = useNavigation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
+  const { loginUser, userSession } = useContext(AuthContext);
+  
   const handleSignIn = async () => {
     if (email.length === 0 || password.length === 0) {
       Alert.alert('Error', 'Enter Both Email And Password');
       return;
     }
-    try {
-      const response = await axios.post(`${BASE_URL}/api/users/login`, { email, password });
-      if (!response.data.success) {
-        Alert.alert('Error', response.data.message);
-      } else {
-        // Login successful, navigate to home screen or any other screen
-        // navigation.navigate('Home');
-      }
-    } catch (error) {
-      console.error('Login error:', error);
-      Alert.alert('Error', 'Login failed. Please try again.');
+    const userData = {
+      email: email,
+      password: password
+    }
+    const res = await loginUser(userData);
+    if (res) {
+      navigation.navigate('home');
     }
   };
-
+  useEffect(() => {
+    if(userSession){
+      navigation.navigate('home');
+    }
+  }, [])
+  
   return (
     <View className="flex-1 justify-center items-center bg-gray-100 p-4">
       <Text className="text-3xl mb-8 text-blue-600">Login</Text>

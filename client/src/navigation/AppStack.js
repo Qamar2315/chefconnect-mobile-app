@@ -8,12 +8,14 @@ import ChangePasswordScreen from '../screens/ChangePasswordScreen';
 import UpdateProfileScreen from '../screens/UpdateProfileScreen';
 import UpdateRecipeScreen from '../screens/UpdateRecipeScreen';
 import HomeScreen from '../screens/HomeScreen';
+import LoadingScreen from '../screens/LoadingScreen';
 
 const Stack = createNativeStackNavigator();
 
 const AppStack = () => {
     return (
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Navigator initialRouteName='home' screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="loading" component={LoadingScreen} />
             <Stack.Screen name='home' component={HomeScreen} />
             <Stack.Screen name='add-recipe' component={AddRecipeScreen} />
             <Stack.Screen name='view-recipe' component={ViewRecipeScreen} />

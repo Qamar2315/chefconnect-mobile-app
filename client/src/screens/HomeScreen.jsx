@@ -1,22 +1,49 @@
-import React, { useState, useContext } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, FlatList } from 'react-native';
+import React, { useState, useContext, useEffect } from 'react';
+import { View, Text, TextInput, TouchableOpacity, Image, FlatList, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { recipes } from '../../test';
+import axios from 'axios'; // Import Axios for API requests
 import { AuthContext } from '../helpers/Auth';
 import LoadingScreen from './LoadingScreen';
+import { BASE_URL } from '../../config';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
   const [searchQuery, setSearchQuery] = useState('');
   const { userSession, logoutUser, isLoading } = useContext(AuthContext);
+  const [recipes, setRecipes] = useState([]);
 
-  const handlePressButtton = (_id) => {
+  const fetchRecipes = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/api/recipes`); // Adjust URL based on your API
+      if(response.data.success){
+        setRecipes(response.data.data); // Assuming your API returns an array of recipes
+      }else{
+        Alert.alert('Error', response.data.message);
+      }
+    } catch (error) {
+      console.error('Error fetching recipes:', error);
+      // Handle error as needed (e.g., show error message to the user)
+    }
+  };
+
+  useEffect(() => {
+    if (!userSession) {
+      navigation.navigate('login');
+    } else {
+      // Fetch all recipes from the API
+      fetchRecipes();
+    }
+  }, [userSession]); // Trigger effect when userSession changes
+
+  const handlePressButton = (_id) => {
     navigation.navigate('view-recipe', { recipeId: _id });
-  }
-  
+  };
+
   const renderRecipeCard = ({ item }) => (
-    <TouchableOpacity className="bg-white rounded-lg shadow-md p-4 m-2"
-      onPress={() => { handlePressButtton(item._id) }}>
+    <TouchableOpacity
+      className="bg-white rounded-lg shadow-md p-4 m-2"
+      onPress={() => handlePressButton(item._id)}
+    >
       <View className="flex items-center">
         <Text className="text-lg font-bold">{item.title}</Text>
         <Text className="text-sm">{item.description}</Text>
@@ -32,10 +59,10 @@ const HomeScreen = () => {
   const filteredRecipes = recipes.filter(recipe =>
     recipe.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
   const handleLogout = () => {
     logoutUser();
-  }
-  // console.log(userSession);
+  };
   return (
     <>
       {

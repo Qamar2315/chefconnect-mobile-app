@@ -1,16 +1,23 @@
 import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Image, TextInput } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, TextInput } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { recipes } from '../../test'; // Import your recipe data or API call
-import { useState } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { useRoute } from '@react-navigation/native';
+import { AuthContext } from '../helpers/Auth';
+import axios  from 'axios';
+import { BASE_URL } from '../../config';
 
 const ViewRecipeScreen = () => {
+
+    const route = useRoute();
     const { recipeId } = route.params;
-    console.log(recipeId);
     const navigation = useNavigation();
-    const [recipe, setRecipe] = useState(recipes.find(item => item._id === "65ef197bba7ae0d7cf2adc48"));
-    const [reviews, setReviews] = useState(recipe.reviews || [{rating:"5",description:"good",author:"Qamar"}]);
+    const { userSession } = useContext(AuthContext);
+    const [recipe, setRecipe] = useState(null);
+    const [reviews, setReviews] = useState(null);
+
+    const [rating, setRating] = useState(0);
+    const [description, setDescription] = useState('');
 
     const handleDeleteReview = (index) => {
         const updatedReviews = [...reviews];
@@ -18,16 +25,6 @@ const ViewRecipeScreen = () => {
         setReviews(updatedReviews);
         // You can send an API request to delete the review from the backend as well
     };
-    if (!recipe) {
-        return (
-            <View className="flex-1 items-center justify-center">
-                <Text className="text-lg text-red-500">Recipe not found!</Text>
-            </View>
-        );
-    }
-    const [rating, setRating] = useState(0);
-    const [description, setDescription] = useState('');
-    const [error, setError] = useState('');
 
     const handleAddReview = async () => {
         try {
@@ -42,16 +39,40 @@ const ViewRecipeScreen = () => {
             // Reset review fields
             setRating(0);
             setDescription('');
-            setError('');
             // Refresh the recipe details to display the updated review
             // You can implement this part based on your data fetching logic
         } catch (error) {
             console.error('Add Review Error:', error);
-            setError('Failed to add review. Please try again.');
         }
     };
 
+    const getRecipe = async () => {
+        try {
+            const response = await axios.get(`${BASE_URL}/api/recipes/${recipeId}`);
+            if(response.data.success){
+                setRecipe(response.data.data); // Assuming your API returns the recipe data in the response
+                console.log(response.data.data);
+            }else{
+                Alert.alert('Error', response.data.message);
+            }
+        } catch (error) {
+            console.error('Error fetching recipe:', error);
+            throw error; // Throw the error for handling in the component
+        }
+    };
+
+    useEffect( () => {
+        // Check if user is logged in
+        if (!userSession) {
+            navigation.navigate('login'); // Navigate to login if user is not logged in
+            return;
+        }else{
+            getRecipe();
+        }
+    }, [recipeId, userSession]); // Depend on recipeId and userSession changes
+
     return (
+        recipe &&
         <ScrollView className="flex-1 p-4">
             <Text className="text-2xl font-bold mb-4">{recipe.title}</Text>
             <Text className="text-lg mb-2">{recipe.description}</Text>
@@ -113,7 +134,6 @@ const ViewRecipeScreen = () => {
                     onChangeText={text => setDescription(text)}
                     multiline
                 />
-                {error ? <Text className="text-red-500 mb-2">{error}</Text> : null}
                 <TouchableOpacity
                     className="bg-blue-500 rounded-lg p-2"
                     onPress={handleAddReview}

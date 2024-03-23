@@ -3,7 +3,6 @@ import { View, Text, TextInput, TouchableOpacity, Image, FlatList, Alert } from 
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios'; // Import Axios for API requests
 import { AuthContext } from '../helpers/Auth';
-import LoadingScreen from './LoadingScreen';
 import { BASE_URL } from '../../config';
 
 const HomeScreen = () => {
@@ -15,9 +14,9 @@ const HomeScreen = () => {
   const fetchRecipes = async () => {
     try {
       const response = await axios.get(`${BASE_URL}/api/recipes`); // Adjust URL based on your API
-      if(response.data.success){
+      if (response.data.success) {
         setRecipes(response.data.data); // Assuming your API returns an array of recipes
-      }else{
+      } else {
         Alert.alert('Error', response.data.message);
       }
     } catch (error) {
@@ -59,48 +58,47 @@ const HomeScreen = () => {
     logoutUser();
   };
   return (
-    <>
-      {
-        isLoading ?
-          <LoadingScreen></LoadingScreen>
-          :
-          <View className="flex-1">
-            {!!userSession ? (
-              <View className="flex-row items-center justify-between px-4 py-2">
-                <Text className="text-lg font-bold">Welcome Back {userSession.name} </Text>
-                <Image source={require('../../assets/icons/profile.png')} className="w-8 h-8 rounded-full" />
-                <TouchableOpacity className="bg-red-500 rounded-lg p-2" onPress={handleLogout}>
-                  <Text className="text-white">Logout</Text>
-                </TouchableOpacity>
-              </View>
-            ) : (
-              <View className="flex-row justify-between px-4 py-2">
-                <TouchableOpacity className="bg-blue-500 rounded-lg p-2" onPress={() => navigation.navigate('login')}>
-                  <Text className="text-white">Login</Text>
-                </TouchableOpacity>
-                <TouchableOpacity className="bg-green-500 rounded-lg p-2" onPress={() => navigation.navigate('signup')}>
-                  <Text className="text-white">Sign Up</Text>
-                </TouchableOpacity>
-              </View>
-            )}
+    <View className="flex-1">
+      {!!userSession ? (
+        <View className="flex-row items-center justify-between px-4 py-2">
+          <Text className="text-lg font-bold">Welcome Back {userSession.name} </Text>
+          <Image source={require('../../assets/icons/profile.png')} className="w-8 h-8 rounded-full" />
+          <TouchableOpacity className="bg-red-500 rounded-lg p-2" onPress={handleLogout}>
+            <Text className="text-white">Logout</Text>
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <View className="flex-row justify-between px-4 py-2">
+          <TouchableOpacity className="bg-blue-500 rounded-lg p-2" onPress={() => navigation.navigate('login')}>
+            <Text className="text-white">Login</Text>
+          </TouchableOpacity>
+          <TouchableOpacity className="bg-green-500 rounded-lg p-2" onPress={() => navigation.navigate('signup')}>
+            <Text className="text-white">Sign Up</Text>
+          </TouchableOpacity>
+        </View>
+      )}
 
-            <TextInput
-              className="border border-gray-300 rounded-lg p-2 mx-4 my-2"
-              placeholder="Search recipes"
-              value={searchQuery}
-              onChangeText={text => setSearchQuery(text)}
-            />
+      <TextInput
+        className="border border-gray-300 rounded-lg p-2 mx-4 my-2"
+        placeholder="Search recipes"
+        value={searchQuery}
+        onChangeText={text => setSearchQuery(text)}
+      />
 
-            <FlatList
-              data={filteredRecipes}
-              keyExtractor={(item) => item._id}
-              renderItem={renderRecipeCard}
-              numColumns={1} // Display one item per row (list layout)
-              contentContainerClassName="p-4"
-            />
-          </View>
-      }
-    </>
+      <FlatList
+        data={filteredRecipes}
+        keyExtractor={(item) => item._id}
+        renderItem={renderRecipeCard}
+        numColumns={1} // Display one item per row (list layout)
+        contentContainerClassName="p-4"
+      />
+      <TouchableOpacity
+        className="bg-blue-500 rounded-full w-16 h-16 items-center justify-center absolute bottom-8 right-8"
+        onPress={()=>{navigation.navigate('add-recipe')}}
+      >
+        <Text className="text-white text-xl">+</Text>
+      </TouchableOpacity>
+    </View>
   );
 };
 

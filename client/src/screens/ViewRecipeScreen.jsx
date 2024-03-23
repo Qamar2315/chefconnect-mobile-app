@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useState, useContext, useEffect } from 'react';
 import { useRoute } from '@react-navigation/native';
 import { AuthContext } from '../helpers/Auth';
-import axios  from 'axios';
+import axios from 'axios';
 import { BASE_URL } from '../../config';
 
 const ViewRecipeScreen = () => {
@@ -14,22 +14,28 @@ const ViewRecipeScreen = () => {
     const navigation = useNavigation();
     const { userSession } = useContext(AuthContext);
     const [recipe, setRecipe] = useState(null);
-    const [reviews, setReviews] = useState(null);
 
     const [rating, setRating] = useState(0);
     const [description, setDescription] = useState('');
 
     const handleDeleteReview = (index) => {
-        const updatedReviews = [...reviews];
+        // Create a copy of the current reviews array
+        const updatedReviews = [...recipe.reviews];
+        // Remove the review at the specified index
         updatedReviews.splice(index, 1);
-        setReviews(updatedReviews);
+        // Update the recipe state with the updated reviews array
+        setRecipe({ ...recipe, reviews: updatedReviews });
         // You can send an API request to delete the review from the backend as well
     };
 
     const handleAddReview = async () => {
+        // Add the new review to the local state first
+        const newReview = { rating, description, author: 'authorId' }; // Update author ID based on your authentication
+        const updatedReviews = [...recipe.reviews, newReview];
+        setRecipe({ ...recipe, reviews: updatedReviews });
         try {
             // Send a POST request to your backend API to add the review
-            const response = await axios.post('YOUR_BACKEND_URL/add-review', {
+            const response = await axios.post(`${BASE_URL}/api/recipes/`, {
                 recipeId: recipe._id,
                 rating,
                 description,
@@ -49,10 +55,9 @@ const ViewRecipeScreen = () => {
     const getRecipe = async () => {
         try {
             const response = await axios.get(`${BASE_URL}/api/recipes/${recipeId}`);
-            if(response.data.success){
-                setRecipe(response.data.data); // Assuming your API returns the recipe data in the response
-                console.log(response.data.data);
-            }else{
+            if (response.data.success) {
+                setRecipe(response.data.data); // Setting recipe we received from backend.
+            } else {
                 Alert.alert('Error', response.data.message);
             }
         } catch (error) {
@@ -61,12 +66,12 @@ const ViewRecipeScreen = () => {
         }
     };
 
-    useEffect( () => {
+    useEffect(() => {
         // Check if user is logged in
         if (!userSession) {
             navigation.navigate('login'); // Navigate to login if user is not logged in
             return;
-        }else{
+        } else {
             getRecipe();
         }
     }, [recipeId, userSession]); // Depend on recipeId and userSession changes
@@ -89,7 +94,7 @@ const ViewRecipeScreen = () => {
             <Text className="text-lg font-bold mb-2">Servings:</Text>
             <Text>{recipe.servings} servings</Text>
             <Text className="text-lg font-bold mb-2">Author:</Text>
-            <Text>{recipe.author}</Text>
+            <Text>{recipe.author.name}</Text>
             <Text className="text-lg font-bold mb-2">Category:</Text>
             <Text>{recipe.category}</Text>
             <Text className="text-lg font-bold mb-2">Tags:</Text>
@@ -105,16 +110,20 @@ const ViewRecipeScreen = () => {
             {/* Reviews section */}
             <View className="mt-4 border-t border-gray-300 pt-4">
                 <Text className="text-xl font-bold mb-2">Reviews:</Text>
-                {reviews.map((review, index) => (
+                {recipe.reviews.map((review, index) => (
                     <View key={index} className="mb-2">
                         <Text>Rating: {review.rating}</Text>
                         <Text>Description: {review.description}</Text>
-                        <TouchableOpacity
-                            className="bg-red-500 rounded-lg p-2 mt-1"
-                            onPress={() => handleDeleteReview(index)}
-                        >
-                            <Text className="text-white">Delete</Text>
-                        </TouchableOpacity>
+                        <Text className="text-sm text-slate-800" >By: {review.author.name}</Text>
+                        {
+                            userSession && userSession._id === review.author._id &&
+                            <TouchableOpacity
+                                className="bg-red-500 rounded-lg p-2 mt-1"
+                                onPress={() => handleDeleteReview(index)}
+                            >
+                                <Text className="text-white">Delete</Text>
+                            </TouchableOpacity>
+                        }
                     </View>
                 ))}
             </View>

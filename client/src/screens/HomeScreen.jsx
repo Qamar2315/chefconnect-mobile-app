@@ -27,13 +27,8 @@ const HomeScreen = () => {
   };
 
   useEffect(() => {
-    if (!userSession) {
-      navigation.navigate('login');
-    } else {
-      // Fetch all recipes from the API
-      fetchRecipes();
-    }
-  }, [userSession]); // Trigger effect when userSession changes
+    fetchRecipes();
+  }, []); // Trigger effect when userSession changes
 
   const handlePressButton = (_id) => {
     navigation.navigate('view-recipe', { recipeId: _id });

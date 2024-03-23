@@ -1,7 +1,7 @@
-const asyncHandler = require('../utilities/CatchAsync')
-const Recipe = require('../model/recipe')
-const Review = require('../model/review')
-const AppError = require('../utilities/AppError')
+const asyncHandler = require('../utilities/CatchAsync');
+const Recipe = require('../model/recipe');
+const Review = require('../model/review');
+const AppError = require('../utilities/AppError');
 
 const getRecipes = asyncHandler(async (req, res) => {
     // Fetch all recipes from the database
@@ -27,7 +27,7 @@ const getRecipeById = asyncHandler(async (req, res) => {
         })
         .populate({
             path: 'reviews',
-            populate: { path: 'user', select: 'name' } // Populate nested fields within reviews (assuming there's a 'user' field in reviews)
+            populate: { path: 'author', select: 'name' } // Populate nested fields within reviews (assuming there's a 'user' field in reviews)
         });
 
     if (!recipe) {

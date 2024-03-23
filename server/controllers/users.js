@@ -25,7 +25,7 @@ const registerUser = asyncHandler(async (req, res) => {
         password: hashedPassword
     })
     if (userAccount) {
-        return res.status(404).json({
+        return res.status(200).json({
             success: true,
             message: 'User registered sucessfully',
             user: {

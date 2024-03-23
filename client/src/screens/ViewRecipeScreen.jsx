@@ -6,6 +6,7 @@ import { useRoute } from '@react-navigation/native';
 import { AuthContext } from '../helpers/Auth';
 import axios from 'axios';
 import { BASE_URL } from '../../config';
+import LoginMessage from '../components/LoginMessage';
 
 const ViewRecipeScreen = () => {
     const route = useRoute();
@@ -151,7 +152,7 @@ const ViewRecipeScreen = () => {
     }, [recipeId, userSession]); // Depend on recipeId and userSession changes
 
     return (
-        recipe &&
+        recipe ?
         <ScrollView className="flex-1 p-4">
             <Text className="text-2xl font-bold mb-4">{recipe.title}</Text>
             <Text className="text-lg mb-2">{recipe.description}</Text>
@@ -238,7 +239,8 @@ const ViewRecipeScreen = () => {
                     <Text className="text-white">Add Review</Text>
                 </TouchableOpacity>
             </View>
-        </ScrollView>
+        </ScrollView>:
+        <LoginMessage></LoginMessage>
     );
 };
 

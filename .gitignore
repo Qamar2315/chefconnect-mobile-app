@@ -36,3 +36,6 @@
 
 # typescript
 /client/*.tsbuildinfo
+
+# token
+token.txt

@@ -7,6 +7,7 @@ import { AuthContext } from '../helpers/Auth';
 import axios from 'axios';
 import { BASE_URL } from '../../config';
 import LoginMessage from '../components/LoginMessage';
+import { useIsFocused } from '@react-navigation/native';
 
 const ViewRecipeScreen = () => {
     const route = useRoute();
@@ -14,7 +15,7 @@ const ViewRecipeScreen = () => {
     const navigation = useNavigation();
     const { userSession } = useContext(AuthContext);
     const [recipe, setRecipe] = useState(null);
-
+    const isFocused = useIsFocused();
     const [rating, setRating] = useState('0');
     const [description, setDescription] = useState('');
 
@@ -149,7 +150,7 @@ const ViewRecipeScreen = () => {
         } else {
             getRecipe();
         }
-    }, [recipeId, userSession]); // Depend on recipeId and userSession changes
+    }, [recipeId, userSession, isFocused]); // Depend on recipeId and userSession changes
 
     return (
         recipe ?

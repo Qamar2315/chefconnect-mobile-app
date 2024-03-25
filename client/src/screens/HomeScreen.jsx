@@ -4,12 +4,14 @@ import { useNavigation } from '@react-navigation/native';
 import axios from 'axios'; // Import Axios for API requests
 import { AuthContext } from '../helpers/Auth';
 import { BASE_URL } from '../../config';
+import { useIsFocused } from '@react-navigation/native';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
   const [searchQuery, setSearchQuery] = useState('');
-  const { userSession, logoutUser, isLoading } = useContext(AuthContext);
+  const { userSession, logoutUser } = useContext(AuthContext);
   const [recipes, setRecipes] = useState([]);
+  const isFocused = useIsFocused();
 
   const fetchRecipes = async () => {
     try {
@@ -27,7 +29,7 @@ const HomeScreen = () => {
 
   useEffect(() => {
     fetchRecipes();
-  }, [userSession]); // Trigger effect when userSession changes
+  }, [userSession, isFocused]); // Trigger effect when userSession changes
 
   const handlePressButton = (_id) => {
     navigation.navigate('view-recipe', { recipeId: _id });

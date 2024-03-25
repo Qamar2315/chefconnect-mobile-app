@@ -12,6 +12,7 @@ const HomeScreen = () => {
   const { userSession, logoutUser } = useContext(AuthContext);
   const [recipes, setRecipes] = useState([]);
   const isFocused = useIsFocused();
+  const [showSideTab, setShowSideTab] = useState(false);
 
   const fetchRecipes = async () => {
     try {
@@ -62,11 +63,9 @@ const HomeScreen = () => {
   return (
     <View className="flex-1">
       {!!userSession ? (
-        <View className="flex-row items-center justify-between px-4 py-2">
-          <Text className="text-lg font-bold">Welcome Back {userSession.name} </Text>
-          <Image source={require('../../assets/icons/profile.png')} className="w-8 h-8 rounded-full" />
-          <TouchableOpacity className="bg-red-500 rounded-lg p-2" onPress={handleLogout}>
-            <Text className="text-white">Logout</Text>
+        <View className='p-4 flex flex-row justify-end'>
+          <TouchableOpacity onPress={() => setShowSideTab(!showSideTab)}>
+            <Image source={require('../../assets/icons/profile.png')} style={{ width: 30, height: 30, borderRadius: 15 }} />
           </TouchableOpacity>
         </View>
       ) : (
@@ -78,7 +77,8 @@ const HomeScreen = () => {
             <Text className="text-white">Sign Up</Text>
           </TouchableOpacity>
         </View>
-      )}
+      )
+      }
 
       <TextInput
         className="border border-gray-300 rounded-lg p-2 mx-4 my-2"
@@ -96,10 +96,28 @@ const HomeScreen = () => {
       />
       <TouchableOpacity
         className="bg-blue-500 rounded-full w-16 h-16 items-center justify-center absolute bottom-8 right-8"
-        onPress={()=>{navigation.navigate('add-recipe')}}
+        onPress={() => { navigation.navigate('add-recipe') }}
       >
         <Text className="text-white text-xl">+</Text>
       </TouchableOpacity>
+      {/* Side tab */}
+      {showSideTab && (
+        <View style={{ position: 'absolute', top: 0, left: 0, bottom: 0, backgroundColor: '#fff', width: 200, padding: 20 }}>
+          {userSession && (
+            <>
+              <TouchableOpacity onPress={() => navigation.navigate('profile')}>
+                <Text>View Profile</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate('')}>
+                <Text></Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleLogout}>
+                <Text>Logout {userSession.name}</Text>
+              </TouchableOpacity>
+            </>
+          )}
+        </View>
+      )}
     </View>
   );
 };

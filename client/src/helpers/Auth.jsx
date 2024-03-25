@@ -36,11 +36,9 @@ const AuthProvider = ({ children }) => {
   };
 
   const logoutUser = () => {
-    setIsLoading(true);
     // Logic for logging out the user
     setUserSession(null);
     AsyncStorage.removeItem('userSession');
-    setIsLoading(false);
   };
 
   const isLoggedIn = async () => {

@@ -7,12 +7,14 @@ import axios from 'axios';
 import { AuthContext } from '../helpers/Auth';
 import { BASE_URL } from '../../config';
 import RecipeNotFound from '../components/RecipeNotFound';
+import { useIsFocused } from '@react-navigation/native';
 
 const UpdateRecipeScreen = () => {
     const navigation = useNavigation();
     const route = useRoute();
     const { userSession } = useContext(AuthContext);
     const [recipe, setRecipe] = useState(null);
+    const isFocused = useIsFocused();
 
     useEffect(() => {
         // Fetch recipe data based on route params or any other method
@@ -30,20 +32,15 @@ const UpdateRecipeScreen = () => {
                 Alert.alert('Error', 'Failed to fetch recipe data.');
             }
         };
-        if (!userSession) {
-            navigation.navigate('login');
-        } else {
-            fetchRecipe();
-        }
-
-    }, [route.params]);
+        fetchRecipe();
+    }, [route.params, isFocused]);
 
     const handleUpdateRecipe = async (values) => {
         // Split comma-separated values into arrays
         values.ingredients = values.ingredients.split(',');
         values.instructions = values.instructions.split(',');
         values.tags = values.tags.split(',');
-        
+
         // Convert string values to integer where needed
         values.cookingTime = parseInt(values.cookingTime);
         values.servings = parseInt(values.servings);

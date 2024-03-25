@@ -29,7 +29,7 @@ const HomeScreen = () => {
 
   useEffect(() => {
     fetchRecipes();
-  }, [userSession, isFocused]); // Trigger effect when userSession changes
+  }, [userSession, isFocused]); // Trigger effect when userSession changes or screen is focused
 
   const handlePressButton = (_id) => {
     navigation.navigate('view-recipe', { recipeId: _id });

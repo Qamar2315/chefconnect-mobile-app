@@ -50,15 +50,7 @@ const AddRecipeScreen = () => {
     category: Yup.string().required('Category is required'),
     tags: Yup.string().required('Tags are required'),
   });
-
-  useEffect(() => {
-    // Check if user is logged in
-    if (!userSession) {
-      navigation.navigate('login'); // Navigate to login if user is not logged in
-      return;
-    }
-  }, [userSession]); // Depend on userSession changes
-
+  
   return (
     <Formik
       initialValues={{

@@ -143,15 +143,15 @@ const ViewRecipeScreen = () => {
     };
 
     useEffect(() => {
-        // Check if user is logged in
-        if (!userSession) {
-            navigation.navigate('login'); // Navigate to login if user is not logged in
-            return;
-        } else {
-            getRecipe();
-        }
+        // // Check if user is logged in
+        // if (!userSession) {
+        //     navigation.navigate('login'); // Navigate to login if user is not logged in
+        //     return;
+        // } else {
+        // }
+        getRecipe();
     }, [recipeId, userSession, isFocused]); // Depend on recipeId and userSession changes
-
+    
     return (
         recipe ?
         <ScrollView className="flex-1 p-4">

@@ -23,12 +23,7 @@ const LoginScreen = () => {
       navigation.navigate('home');
     }
   };
-  useEffect(() => {
-    if(userSession){
-      navigation.navigate('home');
-    }
-  }, [])
-  
+    
   return (
     <View className="flex-1 justify-center items-center bg-gray-100 p-4">
       <Text className="text-3xl mb-8 text-blue-600">Login</Text>
@@ -50,6 +45,12 @@ const LoginScreen = () => {
         onPress={handleSignIn}
       >
         <Text className="text-white text-base">Sign In</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        className="w-4/5 h-12 bg-green-500 rounded items-center justify-center mt-4"
+        onPress={()=>{navigation.navigate('signup')}}
+      >
+        <Text className="text-white text-base">Sign Up</Text>
       </TouchableOpacity>
     </View>
   );

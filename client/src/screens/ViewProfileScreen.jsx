@@ -7,12 +7,15 @@ import LoadingScreen from '../components/LoadingScreen';
 import { AuthContext } from '../helpers/Auth';
 import { BASE_URL } from '../../config';
 import axios from 'axios';
+import { useIsFocused } from '@react-navigation/native';
 
 const ProfileScreen = () => {
     const route = useRoute();
     const { userSession, isLoading, setIsLoading } = useContext(AuthContext);
     const navigation = useNavigation();
     const { userId } = route.params;
+  const isFocused = useIsFocused();
+
 
     const [userProfile, setUserProfile] = useState(null);
 
@@ -37,7 +40,7 @@ const ProfileScreen = () => {
         };
 
         fetchUserData(); // Call the fetchUserData function when the component mounts
-    }, [userId]); // Fetch data when userId changes
+    }, [userId, isFocused]); // Fetch data when userId changes
 
     const handleDeleteRecipe = async (recipeId) => {
         // Show an alert to confirm before deleting
@@ -107,7 +110,7 @@ const ProfileScreen = () => {
 
                     <TouchableOpacity
                         className="bg-green-500 rounded-lg p-2 mt-4"
-                        onPress={() => navigation.navigate('update-password', {userId:userId})}
+                        onPress={() => navigation.navigate('update-profile', {userId:userId})}
                     >
                         <Text className="text-white">Update Profile</Text>
                     </TouchableOpacity>

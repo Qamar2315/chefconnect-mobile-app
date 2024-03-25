@@ -37,8 +37,6 @@ const AddRecipeScreen = () => {
     } else {
       Alert.alert("Error", response.data.message);
     }
-    // Navigate to a different screen if needed
-    // navigation.navigate('Home');
   };
 
 

@@ -105,13 +105,14 @@ const HomeScreen = () => {
         <View style={{ position: 'absolute', top: 0, left: 0, bottom: 0, backgroundColor: '#fff', width: 200, padding: 20 }}>
           {userSession && (
             <>
-              <TouchableOpacity onPress={() => navigation.navigate('profile')}>
+              <TouchableOpacity onPress={() => navigation.navigate('profile', { userId: userSession._id })}>
                 <Text>View Profile</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => navigation.navigate('')}>
+              <TouchableOpacity>
                 <Text></Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={handleLogout}>
+
                 <Text>Logout {userSession.name}</Text>
               </TouchableOpacity>
             </>

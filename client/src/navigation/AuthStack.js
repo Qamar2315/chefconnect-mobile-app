@@ -1,7 +1,7 @@
 import React from 'react';
 
 // Importing Stack Navigator
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 // Importing Screens
 import LoginScreen from '../screens/LoginScreen';
@@ -9,9 +9,13 @@ import RegisterScreen from '../screens/SignUpScreen';
 import HomeScreen from '../screens/HomeScreen';
 
 const AuthStack = () => {
-    const Stack = createNativeStackNavigator();
+  const Stack = createNativeStackNavigator();
   return (
-    <Stack.Navigator initialRouteName='home' screenOptions={{headerShown: true}}>
+    <Stack.Navigator initialRouteName='home' screenOptions={{
+      headerShown: true, // Show header for all screens
+      headerTitle: 'CheffConnect',
+      headerBackTitleVisible: false, // Hide back button 
+    }}>
       <Stack.Screen name="home" component={HomeScreen} />
       <Stack.Screen name="login" component={LoginScreen} />
       <Stack.Screen name="signup" component={RegisterScreen} />

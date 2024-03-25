@@ -1,6 +1,7 @@
 const asyncHandler = require('../utilities/CatchAsync');
 const Recipe = require('../model/recipe');
 const Review = require('../model/review');
+const User = require('../model/user');
 const AppError = require('../utilities/AppError');
 
 const getRecipes = asyncHandler(async (req, res) => {
@@ -86,7 +87,9 @@ const addRecipe = asyncHandler(async (req, res) => {
 
         // Save the new recipe
         await newRecipe.save();
-
+        let user = await User.findById(req.user._id);
+        user.recipes.push(newRecipe);
+        await user.save();
         res.status(201).json({
             success: true,
             message: 'Recipe added successfully',

@@ -133,21 +133,16 @@ const changePassword = asyncHandler(async (req, res) => {
 
 const getProfile = asyncHandler(async (req, res) => {
     const { userId } = req.params; // Assuming userId is passed in the request parameters
-
     // Check if the user with the given ID exists
-    const user = await User.findById(userId);
+    const user = await User.findById(userId).populate('recipes');
     if (!user) {
         throw new AppError("User not found", 404);
     }
-
+    console.log(user);
     // Return user's profile details (email and name)
     res.status(200).json({
         success: true,
-        data: {
-            _id: user._id,
-            name: user.name,
-            email: user.email
-        }
+        data: user
     });
 });
 

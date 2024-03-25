@@ -1,19 +1,47 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { useRoute } from '@react-navigation/native';
+import axios from 'axios';
+import { BASE_URL } from '../../config';
+import { AuthContext } from '../helpers/Auth';
 
 const ChangePasswordScreen = () => {
+  const route = useRoute();
+  const { userId } = route.params;
+
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
+  const { userSession } = useContext(AuthContext);
+  
+  const handleChangePassword = async () => {
+    try {
+      if (oldPassword === '' || newPassword === '') {
+        Alert.alert('Error', 'Please fill in both old and new password.');
+      } else {
+        // Send PUT request to update password
+        const response = await axios.put(`${BASE_URL}/api/users/${userId}/update-password`, {
+          oldPassword,
+          newPassword,
+        },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${userSession.token}`, // Authorization Token
+            }
+          }
+        );
 
-  const handleChangePassword = () => {
-    // Perform password change logic here (e.g., API call)
-    if (oldPassword === '' || newPassword === '') {
-      Alert.alert('Error', 'Please fill in both old and new password.');
-    } else {
-      // Replace this alert with actual logic to update password
-      Alert.alert('Success', 'Password updated successfully.');
-      setOldPassword('');
-      setNewPassword('');
+        if (response.data.success) {
+          Alert.alert('Success', 'Password updated successfully.');
+          setOldPassword('');
+          setNewPassword('');
+        } else {
+          Alert.alert('Error', response.data.message); // Display error message from API response
+        }
+      }
+    } catch (error) {
+      console.error('Error updating password:', error);
+      Alert.alert('Error', 'An error occurred while updating password.');
     }
   };
 

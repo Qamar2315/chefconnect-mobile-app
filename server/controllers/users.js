@@ -111,24 +111,29 @@ const changePassword = asyncHandler(async (req, res) => {
     if (!user) {
         throw new AppError("User not found", 404);
     }
-
+    console.log(user);
     // Check if the old password matches the stored password
     if (!(await matchPass(oldPassword, user.password))) {
-        throw new AppError("Invalid old password", 400);
+        res.status(200).json({
+            success: false,
+            message: 'Old password not correct'
+        });
+    }
+    else {
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
+        // Update user's password with the new password
+        user.password = hashedPassword;
+
+        // Save the updated user
+        await user.save();
+
+        res.status(200).json({
+            success: true,
+            message: 'Password changed successfully'
+        });
     }
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(newPassword, salt);
-    // Update user's password with the new password
-    user.password = hashedPassword;
-
-    // Save the updated user
-    await user.save();
-
-    res.status(200).json({
-        success: true,
-        message: 'Password changed successfully'
-    });
 });
 
 const getProfile = asyncHandler(async (req, res) => {

@@ -23,7 +23,7 @@ const ProfileScreen = () => {
                 const response = await axios.get(`${BASE_URL}/api/users/${userId}`, {
                     headers: {
                         'Content-Type': 'application/json',
-                        Authorization: `Bearer ${userSession.token}`, // Include authorization token if needed
+                        Authorization: `Bearer ${userSession.token}`, // Authorization
                     },
                 });
                 // Assuming your API returns user data in the response.data
@@ -95,19 +95,24 @@ const ProfileScreen = () => {
                 <Text>Email: {userProfile.email}</Text>
             </View>
 
-            <TouchableOpacity
-                className="bg-green-500 rounded-lg p-2 mt-4"
-                onPress={() => navigation.navigate('update-password')}
-            >
-                <Text className="text-white">Change Password</Text>
-            </TouchableOpacity>
+            {
+                userSession &&
+                <View>
+                    <TouchableOpacity
+                        className="bg-green-500 rounded-lg p-2 mt-4"
+                        onPress={() => navigation.navigate('update-password', {userId:userId})}
+                    >
+                        <Text className="text-white">Change Password</Text>
+                    </TouchableOpacity>
 
-            <TouchableOpacity
-                className="bg-green-500 rounded-lg p-2 mt-4"
-                onPress={() => navigation.navigate('update-profile')}
-            >
-                <Text className="text-white">Update Profile</Text>
-            </TouchableOpacity>
+                    <TouchableOpacity
+                        className="bg-green-500 rounded-lg p-2 mt-4"
+                        onPress={() => navigation.navigate('update-password', {userId:userId})}
+                    >
+                        <Text className="text-white">Update Profile</Text>
+                    </TouchableOpacity>
+                </View>
+            }
 
             <ScrollView className="mt-4">
                 <Text className="text-xl font-bold mb-2">My Recipes</Text>

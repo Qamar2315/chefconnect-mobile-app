@@ -111,7 +111,6 @@ const changePassword = asyncHandler(async (req, res) => {
     if (!user) {
         throw new AppError("User not found", 404);
     }
-    console.log(user);
     // Check if the old password matches the stored password
     if (!(await matchPass(oldPassword, user.password))) {
         res.status(200).json({

@@ -104,7 +104,7 @@ const ProfileScreen = () => {
             </View>
 
             {
-                userSession &&
+                userSession && userSession._id === userId &&
                 <View>
                     <TouchableOpacity
                         className="bg-green-500 rounded-lg p-2 mt-4"

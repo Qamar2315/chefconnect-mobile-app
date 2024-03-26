@@ -153,100 +153,102 @@ const ViewRecipeScreen = () => {
     useEffect(() => {
         getRecipe();
     }, [recipeId, userSession, isFocused]); // Depend on recipeId and userSession changes
-    
+
     if (isLoading) {
         return <LoadingScreen />;
     }
     return (
         recipe ?
-        <ScrollView className="flex-1 p-4">
-            <Text className="text-2xl font-bold mb-4">{recipe.title}</Text>
-            <Text className="text-lg mb-2">{recipe.description}</Text>
-            <Text className="text-lg font-bold mb-2">Ingredients:</Text>
-            {recipe.ingredients.map((ingredient, index) => (
-                <Text key={index} className="mb-1">{ingredient}</Text>
-            ))}
-            <Text className="text-lg font-bold mb-2">Instructions:</Text>
-            {recipe.instructions.map((instruction, index) => (
-                <Text key={index} className="mb-1">{instruction}</Text>
-            ))}
-            <Text className="text-lg font-bold mb-2">Cooking Time:</Text>
-            <Text>{recipe.cookingTime} mins</Text>
-            <Text className="text-lg font-bold mb-2">Servings:</Text>
-            <Text>{recipe.servings} servings</Text>
-            <Text className="text-lg font-bold mb-2">Author:</Text>
-            <Text>{recipe.author.name}</Text>
-            <Text className="text-lg font-bold mb-2">Category:</Text>
-            <Text>{recipe.category}</Text>
-            <Text className="text-lg font-bold mb-2">Tags:</Text>
-            {recipe.tags.map((tag, index) => (
-                <Text key={index} className="mb-1">{tag}</Text>
-            ))}
-            {
-                userSession?._id === recipe.author._id &&
-                <View className="flex-row justify-between px-4 pt-4">
+            <ScrollView className="flex-1 p-4">
+                <Text className="text-2xl font-bold mb-4">{recipe.title}</Text>
+                <Text className="text-lg mb-2">{recipe.description}</Text>
+                <Text className="text-lg font-bold mb-2">Ingredients:</Text>
+                {recipe.ingredients.map((ingredient, index) => (
+                    <Text key={index} className="mb-1">{ingredient}</Text>
+                ))}
+                <Text className="text-lg font-bold mb-2">Instructions:</Text>
+                {recipe.instructions.map((instruction, index) => (
+                    <Text key={index} className="mb-1">{instruction}</Text>
+                ))}
+                <Text className="text-lg font-bold mb-2">Cooking Time:</Text>
+                <Text>{recipe.cookingTime} mins</Text>
+                <Text className="text-lg font-bold mb-2">Servings:</Text>
+                <Text>{recipe.servings} servings</Text>
+                <Text className="text-lg font-bold mb-2">Author:</Text>
+                <TouchableOpacity onPress={() => { navigation.navigate('profile', { userId: recipe.author._id }) }}>
+                    <Text>{recipe.author.name}</Text>
+                </TouchableOpacity>
+                <Text className="text-lg font-bold mb-2">Category:</Text>
+                <Text>{recipe.category}</Text>
+                <Text className="text-lg font-bold mb-2">Tags:</Text>
+                {recipe.tags.map((tag, index) => (
+                    <Text key={index} className="mb-1">{tag}</Text>
+                ))}
+                {
+                    userSession?._id === recipe.author._id &&
+                    <View className="flex-row justify-between px-4 pt-4">
+                        <TouchableOpacity
+                            className="bg-blue-500 rounded-lg p-2"
+                            onPress={handleEditRecipe}
+                        >
+                            <Text className="text-white">Edit Recipe</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            className="bg-red-500 rounded-lg p-2"
+                            onPress={handleDeleteRecipe}
+                        >
+                            <Text className="text-white">Delete Recipe</Text>
+                        </TouchableOpacity>
+                    </View>
+                }
+                {/* Reviews section */}
+                {
+                    recipe?.reviews.length > 0 &&
+                    <View className="mt-4 border-t border-gray-300 pt-4">
+                        <Text className="text-xl font-bold mb-2">Reviews:</Text>
+                        {recipe.reviews.map((review, index) => (
+                            <View key={index} className="mb-2">
+                                <Text>Rating: {review.rating}</Text>
+                                <Text>Description: {review.description}</Text>
+                                <Text className="text-sm text-slate-800" >By: {review.author.name}</Text>
+                                {
+                                    userSession && userSession._id === review.author._id &&
+                                    <TouchableOpacity
+                                        className="bg-red-500 rounded-lg p-2 mt-1"
+                                        onPress={() => handleDeleteReview(index)}
+                                    >
+                                        <Text className="text-white">Delete</Text>
+                                    </TouchableOpacity>
+                                }
+                            </View>
+                        ))}
+                    </View>
+                }
+                <View className="mt-4 border-t border-gray-300 pt-4 mb-10">
+                    <Text className="text-xl font-bold mb-2">Add Review:</Text>
+                    <TextInput
+                        className="border border-gray-300 rounded-lg p-2 mb-2"
+                        placeholder="Rating (1-5)"
+                        value={rating}
+                        onChangeText={text => setRating(parseInt(text, 10))}
+                        keyboardType="numeric"
+                    />
+                    <TextInput
+                        className="border border-gray-300 rounded-lg p-2 mb-2"
+                        placeholder="Review Description"
+                        value={description}
+                        onChangeText={text => setDescription(text)}
+                        multiline
+                    />
                     <TouchableOpacity
                         className="bg-blue-500 rounded-lg p-2"
-                        onPress={handleEditRecipe}
+                        onPress={handleAddReview}
                     >
-                        <Text className="text-white">Edit Recipe</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        className="bg-red-500 rounded-lg p-2"
-                        onPress={handleDeleteRecipe}
-                    >
-                        <Text className="text-white">Delete Recipe</Text>
+                        <Text className="text-white">Add Review</Text>
                     </TouchableOpacity>
                 </View>
-            }
-            {/* Reviews section */}
-            {
-                recipe?.reviews.length > 0 &&
-                <View className="mt-4 border-t border-gray-300 pt-4">
-                    <Text className="text-xl font-bold mb-2">Reviews:</Text>
-                    {recipe.reviews.map((review, index) => (
-                        <View key={index} className="mb-2">
-                            <Text>Rating: {review.rating}</Text>
-                            <Text>Description: {review.description}</Text>
-                            <Text className="text-sm text-slate-800" >By: {review.author.name}</Text>
-                            {
-                                userSession && userSession._id === review.author._id &&
-                                <TouchableOpacity
-                                    className="bg-red-500 rounded-lg p-2 mt-1"
-                                    onPress={() => handleDeleteReview(index)}
-                                >
-                                    <Text className="text-white">Delete</Text>
-                                </TouchableOpacity>
-                            }
-                        </View>
-                    ))}
-                </View>
-            }
-            <View className="mt-4 border-t border-gray-300 pt-4 mb-10">
-                <Text className="text-xl font-bold mb-2">Add Review:</Text>
-                <TextInput
-                    className="border border-gray-300 rounded-lg p-2 mb-2"
-                    placeholder="Rating (1-5)"
-                    value={rating}
-                    onChangeText={text => setRating(parseInt(text, 10))}
-                    keyboardType="numeric"
-                />
-                <TextInput
-                    className="border border-gray-300 rounded-lg p-2 mb-2"
-                    placeholder="Review Description"
-                    value={description}
-                    onChangeText={text => setDescription(text)}
-                    multiline
-                />
-                <TouchableOpacity
-                    className="bg-blue-500 rounded-lg p-2"
-                    onPress={handleAddReview}
-                >
-                    <Text className="text-white">Add Review</Text>
-                </TouchableOpacity>
-            </View>
-        </ScrollView>:
-        <LoginMessage></LoginMessage>
+            </ScrollView> :
+            <LoginMessage></LoginMessage>
     );
 };
 

@@ -8,12 +8,13 @@ import axios from 'axios';
 import { BASE_URL } from '../../config';
 import LoginMessage from '../components/LoginMessage';
 import { useIsFocused } from '@react-navigation/native';
+import LoadingScreen from '../components/LoadingScreen';
 
 const ViewRecipeScreen = () => {
     const route = useRoute();
     const { recipeId } = route.params;
     const navigation = useNavigation();
-    const { userSession } = useContext(AuthContext);
+    const { userSession, isLoading, setIsLoading } = useContext(AuthContext);
     const [recipe, setRecipe] = useState(null);
     const isFocused = useIsFocused();
     const [rating, setRating] = useState('0');
@@ -87,15 +88,19 @@ const ViewRecipeScreen = () => {
     };
 
     const getRecipe = async () => {
+        setIsLoading(true);
         try {
             const response = await axios.get(`${BASE_URL}/api/recipes/${recipeId}`);
             if (response.data.success) {
                 setRecipe(response.data.data); // Setting recipe we received from backend.
+                setIsLoading(false);
             } else {
+                setIsLoading(false);
                 Alert.alert('Error', response.data.message);
             }
         } catch (error) {
             console.error('Error fetching recipe:', error);
+            setIsLoading(false);
             throw error; // Throw the error for handling in the component
         }
     };
@@ -119,21 +124,24 @@ const ViewRecipeScreen = () => {
                     style: 'destructive',
                     onPress: async () => {
                         try {
+                            setIsLoading(true);
                             // Send a DELETE request to the backend API
                             const response = await axios.delete(`${BASE_URL}/api/recipes/${recipeId}`, {
                                 headers: {
                                     Authorization: `Bearer ${userSession.token}`,
                                 },
                             });
-                            console.log('Delete Recipe Response:', response.data);
                             if (response.data.success) {
                                 Alert.alert("Congrats", response.data.message);
+                                setIsLoading(false);
                                 navigation.navigate('home');
                             } else {
+                                setIsLoading(false);
                                 Alert.alert("Error", response.data.message);
                             }
                         } catch (error) {
                             console.error('Delete Recipe Error:', error);
+                            setIsLoading(false);
                             // Handle errors such as displaying an error message to the user
                         }
                     },
@@ -143,15 +151,12 @@ const ViewRecipeScreen = () => {
     };
 
     useEffect(() => {
-        // // Check if user is logged in
-        // if (!userSession) {
-        //     navigation.navigate('login'); // Navigate to login if user is not logged in
-        //     return;
-        // } else {
-        // }
         getRecipe();
     }, [recipeId, userSession, isFocused]); // Depend on recipeId and userSession changes
     
+    if (isLoading) {
+        return <LoadingScreen />;
+    }
     return (
         recipe ?
         <ScrollView className="flex-1 p-4">

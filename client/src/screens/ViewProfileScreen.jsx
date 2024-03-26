@@ -22,6 +22,7 @@ const ProfileScreen = () => {
     useEffect(() => {
         // Function to fetch user data based on userId
         const fetchUserData = async () => {
+            setIsLoading(true);
             try {
                 const response = await axios.get(`${BASE_URL}/api/users/${userId}`, {
                     headers: {
@@ -43,6 +44,7 @@ const ProfileScreen = () => {
     }, [userId, isFocused]); // Fetch data when userId changes
 
     const handleDeleteRecipe = async (recipeId) => {
+        setIsLoading(true);
         // Show an alert to confirm before deleting
         Alert.alert(
             'Confirm Deletion',
@@ -66,13 +68,16 @@ const ProfileScreen = () => {
                             console.log('Delete Recipe Response:', response.data);
                             if (response.data.success) {
                                 Alert.alert("Congrats", response.data.message);
+                                setIsLoading(false);
                                 navigation.navigate('home');
                             } else {
+                                setIsLoading(false);
                                 Alert.alert("Error", response.data.message);
                             }
                         } catch (error) {
                             console.error('Delete Recipe Error:', error);
                             // Handle errors such as displaying an error message to the user
+                            setIsLoading(false);
                         }
                     },
                 },

@@ -8,11 +8,12 @@ import { AuthContext } from '../helpers/Auth';
 import { BASE_URL } from '../../config';
 import RecipeNotFound from '../components/RecipeNotFound';
 import { useIsFocused } from '@react-navigation/native';
+import LoadingScreen from '../components/LoadingScreen';
 
 const UpdateRecipeScreen = () => {
     const navigation = useNavigation();
     const route = useRoute();
-    const { userSession } = useContext(AuthContext);
+    const { userSession, isLoading, setIsLoading } = useContext(AuthContext);
     const [recipe, setRecipe] = useState(null);
     const isFocused = useIsFocused();
 
@@ -20,16 +21,21 @@ const UpdateRecipeScreen = () => {
         // Fetch recipe data based on route params or any other method
         const fetchRecipe = async () => {
             try {
+                setIsLoading(true);
                 const { recipeId } = route.params;
                 const response = await axios.get(`${BASE_URL}/api/recipes/${recipeId}`);
                 if (response.data.success) {
                     setRecipe(response.data.data); // Assuming your API returns recipe data
+                    setIsLoading(false);
                 } else {
                     Alert.alert('Error', response.data.message);
+                    setIsLoading(false);
                 }
             } catch (error) {
                 console.error('Error fetching recipe:', error);
+                setIsLoading(false);
                 Alert.alert('Error', 'Failed to fetch recipe data.');
+                
             }
         };
         fetchRecipe();
@@ -44,6 +50,7 @@ const UpdateRecipeScreen = () => {
         // Convert string values to integer where needed
         values.cookingTime = parseInt(values.cookingTime);
         values.servings = parseInt(values.servings);
+        setIsLoading(true);
         try {
             const response = await axios.put(`${BASE_URL}/api/recipes/${recipe._id}`, values, {
                 headers: {
@@ -52,6 +59,7 @@ const UpdateRecipeScreen = () => {
                 },
             });
             if (response.data.success) {
+                setIsLoading(false);
                 Alert.alert('Success', response.data.message);
                 navigation.navigate('view-recipe', { recipeId: recipe._id }); // Go back to the view recipe screen after successful update
             } else {
@@ -59,9 +67,14 @@ const UpdateRecipeScreen = () => {
             }
         } catch (error) {
             console.error('Update Recipe Error:', error);
+            setIsLoading(false);
             Alert.alert('Error', 'Failed to update recipe.');
         }
     };
+
+    if (isLoading || !recipe) {
+        return <LoadingScreen />;
+    }
 
     const validationSchema = Yup.object().shape({
         title: Yup.string().required('Title is required'),

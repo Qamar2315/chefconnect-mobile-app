@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import { BASE_URL } from '../../config';
+import LoadingScreen from '../components/LoadingScreen';
 
 const SignUpScreen = () => {
   const navigation = useNavigation();
@@ -10,6 +11,7 @@ const SignUpScreen = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSignUp = async () => {
     try {
@@ -38,6 +40,10 @@ const SignUpScreen = () => {
     }
   };
 
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
+  
   return (
     <View className="flex-1 justify-center items-center bg-gray-100 p-4">
       <Text className="text-3xl mb-8 text-blue-600">Sign Up</Text>

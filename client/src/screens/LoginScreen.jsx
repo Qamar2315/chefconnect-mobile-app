@@ -2,12 +2,13 @@ import React, { useState, useContext, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { AuthContext } from '../helpers/Auth';
+import LoadingScreen from '../components/LoadingScreen';
 
 const LoginScreen = () => {
   const navigation = useNavigation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { loginUser, userSession, isLoading } = useContext(AuthContext);
+  const { loginUser, isLoading} = useContext(AuthContext);
 
   const handleSignIn = async () => {
     if (email.length === 0 || password.length === 0) {
@@ -23,6 +24,10 @@ const LoginScreen = () => {
       navigation.navigate('home');
     }
   };
+
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
     
   return (
     <View className="flex-1 justify-center items-center bg-gray-100 p-4">

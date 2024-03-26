@@ -71,6 +71,7 @@ const UpdateProfileScreen = () => {
 
     fetchUserData(); // Call the fetchUserData function when the component mounts
   }, [userId]); // Fetch data when userId changes
+  
   if (isLoading) {
     return <LoadingScreen />; // You can create a loading spinner or message component
   }

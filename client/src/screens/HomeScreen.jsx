@@ -5,26 +5,32 @@ import axios from 'axios'; // Import Axios for API requests
 import { AuthContext } from '../helpers/Auth';
 import { BASE_URL } from '../../config';
 import { useIsFocused } from '@react-navigation/native';
+import LoadingScreen from '../components/LoadingScreen';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
   const [searchQuery, setSearchQuery] = useState('');
-  const { userSession, logoutUser } = useContext(AuthContext);
+  const { userSession, logoutUser, isLoading, setIsLoading } = useContext(AuthContext);
   const [recipes, setRecipes] = useState([]);
   const isFocused = useIsFocused();
   const [showSideTab, setShowSideTab] = useState(false);
 
   const fetchRecipes = async () => {
     try {
+      setIsLoading(true);
       const response = await axios.get(`${BASE_URL}/api/recipes`); // Adjust URL based on your API
       if (response.data.success) {
         setRecipes(response.data.data); // Assuming your API returns an array of recipes
+        setIsLoading(false);
       } else {
         Alert.alert('Error', response.data.message);
+        setIsLoading(false);
       }
     } catch (error) {
       console.error('Error fetching recipes:', error);
       // Handle error as needed (e.g., show error message to the user)
+      setIsLoading(false);
+
     }
   };
 
@@ -60,6 +66,10 @@ const HomeScreen = () => {
   const handleLogout = () => {
     logoutUser();
   };
+
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
   return (
     <View className="flex-1">
       {!!userSession ? (

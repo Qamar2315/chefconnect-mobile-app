@@ -8,10 +8,12 @@ import { useContext, useEffect } from 'react';
 import axios from 'axios';
 import { BASE_URL } from '../../config';
 import { Alert } from 'react-native';
+import LoadingScreen from '../components/LoadingScreen';
+
 
 const AddRecipeScreen = () => {
   const navigation = useNavigation();
-  const { userSession } = useContext(AuthContext);
+  const { userSession, isLoading, setIsLoading } = useContext(AuthContext);
 
 
   const handleAddRecipe = async (values) => {
@@ -24,6 +26,7 @@ const AddRecipeScreen = () => {
     values.cookingTime = parseInt(values.cookingTime);
     values.servings = parseInt(values.servings);
 
+    setIsLoading(true);
     // Send POST request to server with form data
     const response = await axios.post(`${BASE_URL}/api/recipes`, values, {
       headers: {
@@ -32,14 +35,18 @@ const AddRecipeScreen = () => {
       },
     });
     if (response.data.success) {
+      setIsLoading(false);
       Alert.alert("Congrats", response.data.message);
       navigation.navigate('home');
     } else {
       Alert.alert("Error", response.data.message);
+      setIsLoading(false);
     }
   };
 
-
+  if (isLoading) {
+    return <LoadingScreen />; // You can create a loading spinner or message component
+  }
   const validationSchema = Yup.object().shape({
     title: Yup.string().required('Title is required'),
     description: Yup.string().required('Description is required'),
@@ -50,7 +57,7 @@ const AddRecipeScreen = () => {
     category: Yup.string().required('Category is required'),
     tags: Yup.string().required('Tags are required'),
   });
-  
+
   return (
     <Formik
       initialValues={{

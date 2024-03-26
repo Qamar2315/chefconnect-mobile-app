@@ -4,11 +4,11 @@ ChefConnect is a mobile recipe-sharing app built with React Native, MongoDB, Exp
 
 ## Features
 
-- Discover a wide variety of recipes.
-- Save your favorite recipes for later reference.
-- Share recipes securely within the app.
-- User authentication and authorization.
-- Responsive design for a seamless mobile experience.
+- Explore a diverse range of recipes.
+- Create and customize your own recipes.
+- Share and receive reviews on recipes.
+- Ensure user authentication and authorization.
+- Enjoy a seamless mobile experience with a responsive design.
 
 ## Technologies Used
 

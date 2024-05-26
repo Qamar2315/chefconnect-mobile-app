@@ -1,25 +1,42 @@
 import React from 'react';
-
-// Importing Stack Navigator
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Icon from 'react-native-vector-icons/Ionicons'; // Import the icon library
 
 // Importing Screens
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/SignUpScreen';
-import HomeScreen from '../screens/HomeScreen';
+
+const Tab = createBottomTabNavigator();
 
 const AuthStack = () => {
-  const Stack = createNativeStackNavigator();
   return (
-    <Stack.Navigator initialRouteName='home' screenOptions={{
-      headerShown: true, // Show header for all screens
-      headerTitle: 'CheffConnect',
-      headerBackTitleVisible: false, // Hide back button 
-    }}>
-      <Stack.Screen name="home" component={HomeScreen} />
-      <Stack.Screen name="login" component={LoginScreen} />
-      <Stack.Screen name="signup" component={RegisterScreen} />
-    </Stack.Navigator>
+    <Tab.Navigator 
+      initialRouteName='home' 
+      screenOptions={{
+        headerShown: true, // Show header for all screens
+        headerTitle: 'CheffConnect',
+        headerBackTitleVisible: false, // Hide back button text
+      }}
+    >
+      <Tab.Screen 
+        name="login" 
+        component={LoginScreen} 
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Icon name="log-in-outline" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen 
+        name="signup" 
+        component={RegisterScreen} 
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Icon name="person-add-outline" color={color} size={size} />
+          ),
+        }}
+      />
+    </Tab.Navigator>
   );
 };
 

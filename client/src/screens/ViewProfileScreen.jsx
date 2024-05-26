@@ -14,7 +14,7 @@ const ProfileScreen = () => {
     const { userSession, isLoading, setIsLoading } = useContext(AuthContext);
     const navigation = useNavigation();
     const { userId } = route.params;
-  const isFocused = useIsFocused();
+    const isFocused = useIsFocused();
 
 
     const [userProfile, setUserProfile] = useState(null);

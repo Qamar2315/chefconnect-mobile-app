@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import { BASE_URL } from "../../config";
@@ -49,12 +49,16 @@ const SignUpScreen = () => {
         return;
       }
 
+      setIsLoading(true);
+
       // Send signup request to the server
       const response = await axios.post(`${BASE_URL}/api/users/signup`, {
         name,
         email,
         password,
       });
+
+      setIsLoading(false);
 
       if (response.data.success) {
         Alert.alert("Congrats", response.data.message);
@@ -63,6 +67,7 @@ const SignUpScreen = () => {
         Alert.alert("Error", response.data.message);
       }
     } catch (error) {
+      setIsLoading(false);
       console.error("Sign Up Error:", error);
       // Handle sign up errors (e.g., display error message to the user)
       Alert.alert("Error", "Sign up failed. Please try again.");
@@ -74,30 +79,30 @@ const SignUpScreen = () => {
   }
 
   return (
-    <View className="flex-1 justify-center items-center bg-gray-100 p-4">
-      <Text className="text-3xl mb-8 text-blue-600">Sign Up</Text>
-      <View className="w-4/5 mb-4">
-        <Text className="text-gray-700 mb-2">Full Name</Text>
+    <View style={styles.container}>
+      <Text style={styles.title}>Sign Up</Text>
+      <View style={styles.inputContainer}>
+        <Text style={styles.label}>Full Name</Text>
         <TextInput
-          className="w-full h-12 border border-gray-300 rounded px-4"
+          style={styles.input}
           placeholder="Enter your full name"
           value={name}
           onChangeText={(text) => setName(text)}
         />
       </View>
-      <View className="w-4/5 mb-4">
-        <Text className="text-gray-700 mb-2">Email</Text>
+      <View style={styles.inputContainer}>
+        <Text style={styles.label}>Email</Text>
         <TextInput
-          className="w-full h-12 border border-gray-300 rounded px-4"
+          style={styles.input}
           placeholder="Enter your email"
           value={email}
           onChangeText={(text) => setEmail(text)}
         />
       </View>
-      <View className="w-4/5 mb-4">
-        <Text className="text-gray-700 mb-2">Password</Text>
+      <View style={styles.inputContainer}>
+        <Text style={styles.label}>Password</Text>
         <TextInput
-          className="w-full h-12 border border-gray-300 rounded px-4"
+          style={styles.input}
           placeholder="Enter your password"
           secureTextEntry={true}
           value={password}
@@ -105,13 +110,59 @@ const SignUpScreen = () => {
         />
       </View>
       <TouchableOpacity
-        className="w-4/5 h-12 bg-blue-600 rounded items-center justify-center"
+        style={styles.button}
         onPress={handleSignUp}
       >
-        <Text className="text-white text-base">Sign Up</Text>
+        <Text style={styles.buttonText}>Sign Up</Text>
       </TouchableOpacity>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#f5f5f5",
+    padding: 16,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 24,
+    color: "#007bff",
+  },
+  inputContainer: {
+    width: "80%",
+    marginBottom: 16,
+  },
+  label: {
+    color: "#333",
+    marginBottom: 8,
+  },
+  input: {
+    width: "100%",
+    height: 48,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 8,
+    paddingHorizontal: 16,
+  },
+  button: {
+    width: "80%",
+    height: 48,
+    borderRadius: 8,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#007bff",
+    marginTop: 16,
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+});
 
 export default SignUpScreen;

@@ -1,12 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  FlatList,
-  Alert,
-} from "react-native";
+import { View, Text, TextInput, TouchableOpacity, FlatList, Alert, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios"; // Import Axios for API requests
 import { AuthContext } from "../helpers/Auth";
@@ -17,8 +10,7 @@ import LoadingScreen from "../components/LoadingScreen";
 const HomeScreen = () => {
   const navigation = useNavigation();
   const [searchQuery, setSearchQuery] = useState("");
-  const { userSession, logoutUser, isLoading, setIsLoading } =
-    useContext(AuthContext);
+  const { userSession, logoutUser, isLoading, setIsLoading } = useContext(AuthContext);
   const [recipes, setRecipes] = useState([]);
   const isFocused = useIsFocused();
 
@@ -50,17 +42,17 @@ const HomeScreen = () => {
 
   const renderRecipeCard = ({ item }) => (
     <TouchableOpacity
-      className="bg-white rounded-lg shadow-md p-4 m-2"
+      style={styles.recipeCard}
       onPress={() => handlePressButton(item._id)}
     >
-      <View className="flex items-center">
-        <Text className="text-lg font-bold">{item.title}</Text>
-        <Text className="text-sm">{item.description}</Text>
-        <View className="flex-row items-center mt-2">
-          <Text className="text-sm ml-1">{item.cookingTime} mins</Text>
+      <View style={styles.recipeContent}>
+        <Text style={styles.recipeTitle}>{item.title}</Text>
+        <Text style={styles.recipeDescription}>{item.description}</Text>
+        <View style={styles.recipeDetails}>
+          <Text style={styles.recipeTime}>{item.cookingTime} mins</Text>
+          <Text style={styles.recipeServings}>{item.servings} servings</Text>
+          <Text style={styles.recipeCategory}>{item.category}</Text>
         </View>
-        <Text className="text-sm mt-1">{item.servings} servings</Text>
-        <Text className="text-sm mt-1">{item.category}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -76,10 +68,11 @@ const HomeScreen = () => {
   if (isLoading) {
     return <LoadingScreen />;
   }
+
   return (
-    <View className="flex-1">
+    <View style={styles.container}>
       <TextInput
-        className="border border-gray-300 rounded-lg p-2 mx-4 my-2"
+        style={styles.searchInput}
         placeholder="Search recipes"
         value={searchQuery}
         onChangeText={(text) => setSearchQuery(text)}
@@ -90,18 +83,94 @@ const HomeScreen = () => {
         keyExtractor={(item) => item._id}
         renderItem={renderRecipeCard}
         numColumns={1} // Display one item per row (list layout)
-        contentContainerClassName="p-4"
+        contentContainerStyle={styles.recipeList}
       />
+
       <TouchableOpacity
-        className="bg-blue-500 rounded-full w-16 h-16 items-center justify-center absolute bottom-8 right-8"
+        style={styles.addButton}
         onPress={() => {
           navigation.navigate("add-recipe");
         }}
       >
-        <Text className="text-white text-xl">+</Text>
+        <Text style={styles.addButtonText}>+</Text>
       </TouchableOpacity>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  searchInput: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 8,
+    padding: 12,
+    marginHorizontal: 16,
+    marginVertical: 8,
+  },
+  recipeList: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+  },
+  recipeCard: {
+    backgroundColor: "#fff",
+    borderRadius: 8,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    margin: 4,
+    padding: 16,
+  },
+  recipeContent: {
+    alignItems: "center",
+  },
+  recipeTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 4,
+  },
+  recipeDescription: {
+    fontSize: 14,
+    marginBottom: 8,
+  },
+  recipeDetails: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  recipeTime: {
+    fontSize: 12,
+  },
+  recipeServings: {
+    fontSize: 12,
+  },
+  recipeCategory: {
+    fontSize: 12,
+  },
+  addButton: {
+    position: "absolute",
+    bottom: 16,
+    right: 16,
+    backgroundColor: "#007bff",
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    alignItems: "center",
+    justifyContent: "center",
+    elevation: 5,
+  },
+  addButtonText: {
+    color: "#fff",
+    fontSize: 24,
+    fontWeight: "bold",
+  },
+});
 
 export default HomeScreen;

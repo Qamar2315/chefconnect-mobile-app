@@ -12,7 +12,7 @@ import { useContext } from "react";
 // Importing screen Stacks
 import AppStack from "../navigation/AppStack";
 import AuthStack from "../navigation/AuthStack";
-// import DrawerStack from "../navigation/DrawerStack";
+import DrawerStack from "../navigation/DrawerStack";
 
 export default function App() {
   const { userSession } = useContext(AuthContext);
@@ -23,7 +23,7 @@ export default function App() {
       screenOptions={{ headerShown: false }}
     >
       {userSession ? (
-        <Stack.Screen name="appStack" component={AppStack} />
+        <Stack.Screen name="appStack" component={DrawerStack} />
       ) : (
         <Stack.Screen name="authStack" component={AuthStack} />
       )}

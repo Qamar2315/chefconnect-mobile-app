@@ -16,9 +16,8 @@ const AppStack = () => {
     const Stack = createNativeStackNavigator();
     return (
         <Stack.Navigator screenOptions={{
-            headerShown: true, // Show header for all screens
-            headerTitle: 'CheffConnect',
-            headerBackTitleVisible: false, // Hide back button 
+            headerShown: false,
+            headerBackTitleVisible: true, // Hide back button 
         }}>
             <Stack.Screen name="home" component={HomeScreen} />
             <Stack.Screen name="view-recipe" component={ViewRecipeScreen} />

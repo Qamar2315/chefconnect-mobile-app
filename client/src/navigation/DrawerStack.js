@@ -2,7 +2,7 @@ import React from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import AppStack from "./AppStack";
 import LogoutScreen from "../screens/LogoutScreen";
-import AskAIScreen from "../screens/AskAI";
+import SuggestAIScreen from "../screens/SuggestAIScreen";
 import ViewProfileScreen from "../screens/ViewProfileScreen";
 import { AuthContext } from "../helpers/Auth";
 import { useContext } from "react";
@@ -19,7 +19,7 @@ const DrawerStack = () => {
         component={ViewProfileScreen}
         initialParams={{ userId: userSession._id }}
       />
-      <Drawer.Screen name="Ask AI" component={AskAIScreen} />
+      <Drawer.Screen name="Ask AI" component={SuggestAIScreen} />
       <Drawer.Screen
         name={`Logout ${userSession.name}`}
         component={LogoutScreen}

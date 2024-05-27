@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import axios from 'axios';
 import { BASE_URL } from '../../config';
@@ -55,30 +55,59 @@ const ChangePasswordScreen = () => {
   }
 
   return (
-    <View className="flex-1 p-4">
-      <Text className="text-xl font-bold mb-4">Change Password</Text>
+    <View style={styles.container}>
+      <Text style={styles.title}>Change Password</Text>
       <TextInput
-        className="border border-gray-300 rounded-lg p-2 mb-2"
+        style={styles.input}
         placeholder="Old Password"
         value={oldPassword}
         onChangeText={text => setOldPassword(text)}
         secureTextEntry={true}
       />
       <TextInput
-        className="border border-gray-300 rounded-lg p-2 mb-4"
+        style={styles.input}
         placeholder="New Password"
         value={newPassword}
         onChangeText={text => setNewPassword(text)}
         secureTextEntry={true}
       />
       <TouchableOpacity
-        className="bg-blue-500 rounded-lg p-2"
+        style={styles.button}
         onPress={handleChangePassword}
       >
-        <Text className="text-white">Update Password</Text>
+        <Text style={styles.buttonText}>Update Password</Text>
       </TouchableOpacity>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
+  },
+  button: {
+    backgroundColor: '#007bff',
+    borderRadius: 5,
+    padding: 10,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+});
 
 export default ChangePasswordScreen;

@@ -11,6 +11,7 @@ import { BASE_URL } from "../../config";
 import axios from "axios";
 import { AuthContext } from "../helpers/Auth";
 import { useContext } from "react";
+import { ScrollView } from "react-native-gesture-handler";
 
 const SuggestAIScreen = () => {
   const [response, setResponse] = useState([]);
@@ -412,7 +413,7 @@ const SuggestAIScreen = () => {
 
         {/* AI Response */}
         {response.length !== 0 && !loading && (
-          <View style={styles.responseContainer}>
+          <ScrollView style={styles.responseContainer}>
             <Text style={styles.responseText}>AI Response:</Text>
             {response.map((idea, index) => (
               <View key={index} style={styles.ideaContainer}>
@@ -422,7 +423,7 @@ const SuggestAIScreen = () => {
                 </Text>
               </View>
             ))}
-          </View>
+          </ScrollView>
         )}
       </View>
     </Provider>
@@ -448,8 +449,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   responseContainer: {
-    marginTop: 20,
-    alignItems: "center",
+    marginTop: 20
   },
   responseText: {
     fontWeight: "bold",

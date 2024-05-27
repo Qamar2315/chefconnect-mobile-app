@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { AuthContext } from "../helpers/Auth";
 import LoadingScreen from "../components/LoadingScreen";
@@ -43,37 +43,68 @@ const LoginScreen = () => {
   }
 
   return (
-    <View className="flex-1 justify-center items-center bg-gray-100 p-4">
-      <Text className="text-3xl mb-8 text-blue-600">Login</Text>
+    <View style={styles.container}>
+      <Text style={styles.title}>Login</Text>
       <TextInput
-        className="w-4/5 h-12 border border-gray-300 rounded px-4 mb-4"
+        style={styles.input}
         placeholder="Email"
         value={email}
         onChangeText={(text) => setEmail(text)}
       />
       <TextInput
-        className="w-4/5 h-12 border border-gray-300 rounded px-4 mb-4"
+        style={styles.input}
         placeholder="Password"
         secureTextEntry={true}
         value={password}
         onChangeText={(text) => setPassword(text)}
       />
       <TouchableOpacity
-        className="w-4/5 h-12 bg-blue-500 rounded items-center justify-center"
+        style={styles.button}
         onPress={handleSignIn}
       >
-        <Text className="text-white text-base">Sign In</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        className="w-4/5 h-12 bg-green-500 rounded items-center justify-center mt-4"
-        onPress={() => {
-          navigation.navigate("signup");
-        }}
-      >
-        <Text className="text-white text-base">Sign Up</Text>
+        <Text style={styles.buttonText}>Sign In</Text>
       </TouchableOpacity>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#f5f5f5",
+    padding: 16,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 24,
+    color: "#007bff",
+  },
+  input: {
+    width: "80%",
+    height: 48,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 8,
+    paddingHorizontal: 16,
+    marginBottom: 16,
+  },
+  button: {
+    width: "80%",
+    height: 48,
+    borderRadius: 8,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#007bff",
+    marginBottom: 16,
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+});
 
 export default LoginScreen;

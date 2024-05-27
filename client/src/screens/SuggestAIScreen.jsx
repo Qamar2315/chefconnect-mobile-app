@@ -1,10 +1,22 @@
 import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
-import { Button, Menu, Text, Provider, ActivityIndicator } from "react-native-paper";
+import {
+  Button,
+  Menu,
+  Text,
+  Provider,
+  ActivityIndicator,
+} from "react-native-paper";
+import { BASE_URL } from "../../config";
+import axios from "axios";
+import { AuthContext } from "../helpers/Auth";
+import { useContext } from "react";
 
 const SuggestAIScreen = () => {
-  const [response, setResponse] = useState("");
+  const [response, setResponse] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  const { userSession } = useContext(AuthContext);
 
   // State for drop-down menus
   const [diet, setDiet] = useState("");
@@ -21,15 +33,34 @@ const SuggestAIScreen = () => {
   const [visibleCuisine, setVisibleCuisine] = useState(false);
 
   // Function to handle "Get Suggestions" button press
-  const handleAskAI = () => {
+  const handleAskAI = async () => {
     // Check if all options are selected
     if (diet && mealType && time && nutritionalGoals && cuisine) {
       setLoading(true);
-      setTimeout(() => {
-        console.log(diet, mealType, time, nutritionalGoals, cuisine);
-        setResponse("Here are some meal suggestions based on your preferences.");
+      const ideas = await axios.post(
+        `${BASE_URL}/api/model/predict`,
+        {
+          diet,
+          mealType,
+          time,
+          nutritionalGoals,
+          cuisine,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${userSession.token}`, // Include authorization token if needed
+          },
+        }
+      );
+      if(ideas.data.success === false){
+        alert("Some error please try again");
         setLoading(false);
-      }, 2000);
+      }else{
+        setResponse(ideas.data.data);
+        console.log(ideas.data.data);
+        setLoading(false);
+      }
     } else {
       // If any option is not selected, display an alert or error message
       alert("Please select all options before getting suggestions.");
@@ -50,16 +81,76 @@ const SuggestAIScreen = () => {
               </Button>
             }
           >
-            <Menu.Item onPress={() => { setDiet("No Restrictions"); setVisibleDiet(false); }} title="No Restrictions" />
-            <Menu.Item onPress={() => { setDiet("Vegetarian"); setVisibleDiet(false); }} title="Vegetarian" />
-            <Menu.Item onPress={() => { setDiet("Vegan"); setVisibleDiet(false); }} title="Vegan" />
-            <Menu.Item onPress={() => { setDiet("Gluten-Free"); setVisibleDiet(false); }} title="Gluten-Free" />
-            <Menu.Item onPress={() => { setDiet("Dairy-Free"); setVisibleDiet(false); }} title="Dairy-Free" />
-            <Menu.Item onPress={() => { setDiet("Keto"); setVisibleDiet(false); }} title="Keto" />
-            <Menu.Item onPress={() => { setDiet("Paleo"); setVisibleDiet(false); }} title="Paleo" />
-            <Menu.Item onPress={() => { setDiet("Pescatarian"); setVisibleDiet(false); }} title="Pescatarian" />
-            <Menu.Item onPress={() => { setDiet("Kosher"); setVisibleDiet(false); }} title="Kosher" />
-            <Menu.Item onPress={() => { setDiet("Halal"); setVisibleDiet(false); }} title="Halal" />
+            <Menu.Item
+              onPress={() => {
+                setDiet("No Restrictions");
+                setVisibleDiet(false);
+              }}
+              title="No Restrictions"
+            />
+            <Menu.Item
+              onPress={() => {
+                setDiet("Vegetarian");
+                setVisibleDiet(false);
+              }}
+              title="Vegetarian"
+            />
+            <Menu.Item
+              onPress={() => {
+                setDiet("Vegan");
+                setVisibleDiet(false);
+              }}
+              title="Vegan"
+            />
+            <Menu.Item
+              onPress={() => {
+                setDiet("Gluten-Free");
+                setVisibleDiet(false);
+              }}
+              title="Gluten-Free"
+            />
+            <Menu.Item
+              onPress={() => {
+                setDiet("Dairy-Free");
+                setVisibleDiet(false);
+              }}
+              title="Dairy-Free"
+            />
+            <Menu.Item
+              onPress={() => {
+                setDiet("Keto");
+                setVisibleDiet(false);
+              }}
+              title="Keto"
+            />
+            <Menu.Item
+              onPress={() => {
+                setDiet("Paleo");
+                setVisibleDiet(false);
+              }}
+              title="Paleo"
+            />
+            <Menu.Item
+              onPress={() => {
+                setDiet("Pescatarian");
+                setVisibleDiet(false);
+              }}
+              title="Pescatarian"
+            />
+            <Menu.Item
+              onPress={() => {
+                setDiet("Kosher");
+                setVisibleDiet(false);
+              }}
+              title="Kosher"
+            />
+            <Menu.Item
+              onPress={() => {
+                setDiet("Halal");
+                setVisibleDiet(false);
+              }}
+              title="Halal"
+            />
             {/* Other diet options */}
           </Menu>
         </View>
@@ -75,11 +166,41 @@ const SuggestAIScreen = () => {
               </Button>
             }
           >
-            <Menu.Item onPress={() => { setMealType("Breakfast"); setVisibleMealType(false); }} title="Breakfast" />
-            <Menu.Item onPress={() => { setMealType("Lunch"); setVisibleMealType(false); }} title="Lunch" />
-            <Menu.Item onPress={() => { setMealType("Dinner"); setVisibleMealType(false); }} title="Dinner" />
-            <Menu.Item onPress={() => { setMealType("Snack"); setVisibleMealType(false); }} title="Snack" />
-            <Menu.Item onPress={() => { setMealType("Dessert"); setVisibleMealType(false); }} title="Dessert" />
+            <Menu.Item
+              onPress={() => {
+                setMealType("Breakfast");
+                setVisibleMealType(false);
+              }}
+              title="Breakfast"
+            />
+            <Menu.Item
+              onPress={() => {
+                setMealType("Lunch");
+                setVisibleMealType(false);
+              }}
+              title="Lunch"
+            />
+            <Menu.Item
+              onPress={() => {
+                setMealType("Dinner");
+                setVisibleMealType(false);
+              }}
+              title="Dinner"
+            />
+            <Menu.Item
+              onPress={() => {
+                setMealType("Snack");
+                setVisibleMealType(false);
+              }}
+              title="Snack"
+            />
+            <Menu.Item
+              onPress={() => {
+                setMealType("Dessert");
+                setVisibleMealType(false);
+              }}
+              title="Dessert"
+            />
           </Menu>
         </View>
 
@@ -94,10 +215,34 @@ const SuggestAIScreen = () => {
               </Button>
             }
           >
-            <Menu.Item onPress={() => { setTime("Under 15 Minutes"); setVisibleTime(false); }} title="Under 15 Minutes" />
-            <Menu.Item onPress={() => { setTime("15-30 Minutes"); setVisibleTime(false); }} title="15-30 Minutes" />
-            <Menu.Item onPress={() => { setTime("30-60 Minutes"); setVisibleTime(false); }} title="30-60 Minutes" />
-            <Menu.Item onPress={() => { setTime("Over 60 Minutes"); setVisibleTime(false); }} title="Over 60 Minutes" />
+            <Menu.Item
+              onPress={() => {
+                setTime("Under 15 Minutes");
+                setVisibleTime(false);
+              }}
+              title="Under 15 Minutes"
+            />
+            <Menu.Item
+              onPress={() => {
+                setTime("15-30 Minutes");
+                setVisibleTime(false);
+              }}
+              title="15-30 Minutes"
+            />
+            <Menu.Item
+              onPress={() => {
+                setTime("30-60 Minutes");
+                setVisibleTime(false);
+              }}
+              title="30-60 Minutes"
+            />
+            <Menu.Item
+              onPress={() => {
+                setTime("Over 60 Minutes");
+                setVisibleTime(false);
+              }}
+              title="Over 60 Minutes"
+            />
           </Menu>
         </View>
 
@@ -107,18 +252,63 @@ const SuggestAIScreen = () => {
             visible={visibleNutritionalGoals}
             onDismiss={() => setVisibleNutritionalGoals(false)}
             anchor={
-              <Button onPress={() => setVisibleNutritionalGoals(true)} mode="outlined">
+              <Button
+                onPress={() => setVisibleNutritionalGoals(true)}
+                mode="outlined"
+              >
                 {nutritionalGoals ? nutritionalGoals : "Nutritional Goals"}
               </Button>
             }
           >
-            <Menu.Item onPress={() => { setNutritionalGoals("Balanced Diet"); setVisibleNutritionalGoals(false); }} title="Balanced Diet" />
-            <Menu.Item onPress={() => { setNutritionalGoals("Low-Calorie"); setVisibleNutritionalGoals(false); }} title="Low-Calorie" />
-            <Menu.Item onPress={() => { setNutritionalGoals("High-Protein"); setVisibleNutritionalGoals(false); }} title="High-Protein" />
-            <Menu.Item onPress={() => { setNutritionalGoals("Low-Carb"); setVisibleNutritionalGoals(false); }} title="Low-Carb" />
-            <Menu.Item onPress={() => { setNutritionalGoals("Heart-Healthy"); setVisibleNutritionalGoals(false); }} title="Heart-Healthy" />
-            <Menu.Item onPress={() => { setNutritionalGoals("Diabetes-Friendly"); setVisibleNutritionalGoals(false); }} title="Diabetes-Friendly" />
-            <Menu.Item onPress={() => { setNutritionalGoals("Custom"); setVisibleNutritionalGoals(false); }} title="Custom (Specify)" />
+            <Menu.Item
+              onPress={() => {
+                setNutritionalGoals("Balanced Diet");
+                setVisibleNutritionalGoals(false);
+              }}
+              title="Balanced Diet"
+            />
+            <Menu.Item
+              onPress={() => {
+                setNutritionalGoals("Low-Calorie");
+                setVisibleNutritionalGoals(false);
+              }}
+              title="Low-Calorie"
+            />
+            <Menu.Item
+              onPress={() => {
+                setNutritionalGoals("High-Protein");
+                setVisibleNutritionalGoals(false);
+              }}
+              title="High-Protein"
+            />
+            <Menu.Item
+              onPress={() => {
+                setNutritionalGoals("Low-Carb");
+                setVisibleNutritionalGoals(false);
+              }}
+              title="Low-Carb"
+            />
+            <Menu.Item
+              onPress={() => {
+                setNutritionalGoals("Heart-Healthy");
+                setVisibleNutritionalGoals(false);
+              }}
+              title="Heart-Healthy"
+            />
+            <Menu.Item
+              onPress={() => {
+                setNutritionalGoals("Diabetes-Friendly");
+                setVisibleNutritionalGoals(false);
+              }}
+              title="Diabetes-Friendly"
+            />
+            <Menu.Item
+              onPress={() => {
+                setNutritionalGoals("Custom");
+                setVisibleNutritionalGoals(false);
+              }}
+              title="Custom (Specify)"
+            />
           </Menu>
         </View>
 
@@ -133,16 +323,76 @@ const SuggestAIScreen = () => {
               </Button>
             }
           >
-            <Menu.Item onPress={() => { setCuisine("No Preference"); setVisibleCuisine(false); }} title="No Preference" />
-            <Menu.Item onPress={() => { setCuisine("Italian"); setVisibleCuisine(false); }} title="Italian" />
-            <Menu.Item onPress={() => { setCuisine("Chinese"); setVisibleCuisine(false); }} title="Chinese" />
-            <Menu.Item onPress={() => { setCuisine("Mexican"); setVisibleCuisine(false); }} title="Mexican" />
-            <Menu.Item onPress={() => { setCuisine("Indian"); setVisibleCuisine(false); }} title="Indian" />
-            <Menu.Item onPress={() => { setCuisine("Mediterranean"); setVisibleCuisine(false); }} title="Mediterranean" />
-            <Menu.Item onPress={() => { setCuisine("American"); setVisibleCuisine(false); }} title="American" />
-            <Menu.Item onPress={() => { setCuisine("Thai"); setVisibleCuisine(false); }} title="Thai" />
-            <Menu.Item onPress={() => { setCuisine("Japanese"); setVisibleCuisine(false); }} title="Japanese" />
-            <Menu.Item onPress={() => { setCuisine("Custom"); setVisibleCuisine(false); }} title="Custom (Specify)" />
+            <Menu.Item
+              onPress={() => {
+                setCuisine("No Preference");
+                setVisibleCuisine(false);
+              }}
+              title="No Preference"
+            />
+            <Menu.Item
+              onPress={() => {
+                setCuisine("Italian");
+                setVisibleCuisine(false);
+              }}
+              title="Italian"
+            />
+            <Menu.Item
+              onPress={() => {
+                setCuisine("Chinese");
+                setVisibleCuisine(false);
+              }}
+              title="Chinese"
+            />
+            <Menu.Item
+              onPress={() => {
+                setCuisine("Mexican");
+                setVisibleCuisine(false);
+              }}
+              title="Mexican"
+            />
+            <Menu.Item
+              onPress={() => {
+                setCuisine("Indian");
+                setVisibleCuisine(false);
+              }}
+              title="Indian"
+            />
+            <Menu.Item
+              onPress={() => {
+                setCuisine("Mediterranean");
+                setVisibleCuisine(false);
+              }}
+              title="Mediterranean"
+            />
+            <Menu.Item
+              onPress={() => {
+                setCuisine("American");
+                setVisibleCuisine(false);
+              }}
+              title="American"
+            />
+            <Menu.Item
+              onPress={() => {
+                setCuisine("Thai");
+                setVisibleCuisine(false);
+              }}
+              title="Thai"
+            />
+            <Menu.Item
+              onPress={() => {
+                setCuisine("Japanese");
+                setVisibleCuisine(false);
+              }}
+              title="Japanese"
+            />
+            <Menu.Item
+              onPress={() => {
+                setCuisine("Custom");
+                setVisibleCuisine(false);
+              }}
+              title="Custom (Specify)"
+            />
           </Menu>
         </View>
 
@@ -152,13 +402,26 @@ const SuggestAIScreen = () => {
         </Button>
 
         {/* Loading Indicator */}
-        {loading && <ActivityIndicator animating={true} size="large" style={styles.loading} />}
+        {loading && (
+          <ActivityIndicator
+            animating={true}
+            size="large"
+            style={styles.loading}
+          />
+        )}
 
         {/* AI Response */}
-        {response !== "" && !loading && (
+        {response.length !== 0 && !loading && (
           <View style={styles.responseContainer}>
             <Text style={styles.responseText}>AI Response:</Text>
-            <Text style={styles.response}>{response}</Text>
+            {response.map((idea, index) => (
+              <View key={index} style={styles.ideaContainer}>
+                <Text style={styles.ideaTitle}>{idea.ideaTitle}</Text>
+                <Text style={styles.ideaDescription}>
+                  {idea.ideaDescription}
+                </Text>
+              </View>
+            ))}
           </View>
         )}
       </View>
@@ -195,6 +458,21 @@ const styles = StyleSheet.create({
   response: {
     fontSize: 16,
     textAlign: "center",
+  },
+  ideaContainer: {
+    marginBottom: 10,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 8,
+  },
+  ideaTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 5,
+  },
+  ideaDescription: {
+    fontSize: 14,
   },
 });
 

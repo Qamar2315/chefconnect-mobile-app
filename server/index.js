@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const { notFound, errorHandler } = require('./middlewares/ErrorHandler');
 const recipeRoutes = require('./routes/recipes');
 const userRoutes = require('./routes/users');
+const modelRoutes = require('./routes/model');
 const dotenv = require('dotenv')
 dotenv.config(); // Load environment variables from .env file
 
@@ -22,6 +23,7 @@ app.use(express.urlencoded({ extended: true }));
 // Routers
 app.use('/api/recipes', recipeRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/model', modelRoutes);
 
 // Error middlewares
 app.use(notFound);

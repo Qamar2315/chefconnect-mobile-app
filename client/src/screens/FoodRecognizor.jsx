@@ -3,6 +3,7 @@ import { View, Text, Image, Platform, PermissionsAndroid } from "react-native";
 import { Button, TextInput } from "react-native-paper";
 import ImagePicker from "react-native-image-picker";
 import { ActivityIndicator } from "react-native-paper";
+import { BASE_URL_FLASK } from "../../config";
 
 const styles = {
   container: {
@@ -81,7 +82,7 @@ const FoodRecognizer = () => {
       setIsLoading(true);
       // Send image to Flask server and handle response
       // (Replace with your actual API call)
-      fetch("http://localhost:5000/predict", {
+      fetch(`${BASE_URL_FLASK}/api/predict`, {
         method: "POST",
         body: new FormData({ image: { uri: imagePath, name: "image.jpg" } }), // Adjust as needed
       })

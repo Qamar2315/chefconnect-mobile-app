@@ -1,22 +1,27 @@
 # ChefConnect Mobile App
 
-ChefConnect is a mobile recipe-sharing app built with React Native, MongoDB, Express, Node.js, and Tailwind CSS. It allows users to discover, save, and share recipes securely. This README.md file provides an overview of the project, installation instructions, and usage guidelines.
+ChefConnect is a mobile recipe-sharing app built with React Native, MongoDB, Express, Node.js, and Tailwind CSS. It allows users to discover, save, and share recipes securely. Additionally, it incorporates AI-powered features for calorie counting, food recognition, and personalized recipe recommendations. This README.md file provides an overview of the project, installation instructions, and usage guidelines.
 
 ## Features
 
-- Explore a diverse range of recipes.
-- Create and customize your own recipes.
-- Share and receive reviews on recipes.
-- Ensure user authentication and authorization.
-- Enjoy a seamless mobile experience with a responsive design.
+-Explore a diverse range of recipes.
+-Create and customize your own recipes.
+-Share and receive reviews on recipes.
+-Ensure user authentication and authorization.
+-Enjoy AI-powered recipe recommendations based on preferences, dietary restrictions, and available ingredients.
+-Use AI to count calories and recognize food items from photos.
+-Experience a seamless mobile experience with a responsive design.
 
 ## Technologies Used
 
-- React Native
-- MongoDB
-- Express
-- Node.js
-- Tailwind CSS
+-#Frontend: React Native
+-#Backend: MongoDB, Express, Node.js
+-#Styling: Tailwind CSS
+-#Authentication: JWT (JSON Web Tokens)
+-#AI Services:
+-Gemini API for recipe recommendations
+-Python Flask server for deploying AI models
+-Keras and TensorFlow for training and loading deep learning models (CNN)
 
 ## Installation
 

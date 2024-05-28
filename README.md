@@ -1,6 +1,9 @@
 # ChefConnect Mobile App
 
-ChefConnect is a mobile recipe-sharing app built with React Native, MongoDB, Express, Node.js, and Tailwind CSS. It allows users to discover, save, and share recipes securely. This README.md file provides an overview of the project, installation instructions, and usage guidelines.
+ChefConnect is a mobile recipe-sharing app built with React Native, MongoDB, Express, Node.js, and Tailwind CSS. It allows users to discover, save, and share recipes securely. Additionally, it incorporates AI-powered features for calorie counting, food recognition, and personalized recipe recommendations. This README.md file provides an overview of the project, installation instructions, and usage guidelines.
+
+## User Interface
+![Alt text](screenshots/1peg)
 
 ## Features
 
@@ -8,15 +11,20 @@ ChefConnect is a mobile recipe-sharing app built with React Native, MongoDB, Exp
 - Create and customize your own recipes.
 - Share and receive reviews on recipes.
 - Ensure user authentication and authorization.
-- Enjoy a seamless mobile experience with a responsive design.
+- Enjoy AI-powered recipe recommendations based on preferences, dietary restrictions, and available ingredients.
+- Use AI to count calories and recognize food items from photos.
+- Experience a seamless mobile experience with a responsive design.
 
 ## Technologies Used
 
-- React Native
-- MongoDB
-- Express
-- Node.js
-- Tailwind CSS
+- #Frontend: React Native
+- #Backend: MongoDB, Express, Node.js
+- #Styling: Tailwind CSS
+- #Authentication: JWT (JSON Web Tokens)
+- #AI Services:
+- Gemini API for recipe recommendations
+- Python Flask server for deploying AI models
+- Keras and TensorFlow for training and loading deep learning models (CNN)
 
 ## Installation
 
@@ -57,14 +65,22 @@ To run the ChefConnect mobile app locally, follow these steps:
     cd server
     npm start
     ```
-8. Open the app on your mobile device using the Expo Go app or an emulator.
+    
+8. Run AI Flask server:
+    ```
+    cd dl_server
+    python app.py
+    ```
+    
+9. Open the app on your mobile device using the Expo Go app or an emulator.
 
 # Usage
 
 1. Sign up or log in to your ChefConnect account.
-2. Browse recipes, create your own and add reviews.
+2. Browse recipes, create your own, and add reviews.
 3. Explore various categories and cuisines to discover new recipes.
-4. Enjoy a seamless recipe-sharing experience on your mobile device.
+4. Use the AI features to get personalized recipe recommendations, count calories, and recognize food items from photos.
+5. Enjoy a seamless recipe-sharing experience on your mobile device.
 
 # Contributing
 

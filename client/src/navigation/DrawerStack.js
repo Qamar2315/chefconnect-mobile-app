@@ -4,6 +4,9 @@ import AppStack from "./AppStack";
 import LogoutScreen from "../screens/LogoutScreen";
 import SuggestAIScreen from "../screens/SuggestAIScreen";
 import ViewProfileScreen from "../screens/ViewProfileScreen";
+import RecognizeFoodScreen from "../screens/FoodRecognition";
+import RecognizeProduceScreen from "../screens/FruitVeggieRecognizerScreen";
+
 import { AuthContext } from "../helpers/Auth";
 import { useContext } from "react";
 
@@ -19,7 +22,9 @@ const DrawerStack = () => {
         component={ViewProfileScreen}
         initialParams={{ userId: userSession._id }}
       />
-      <Drawer.Screen name="Ask AI" component={SuggestAIScreen} />
+      <Drawer.Screen name="Recipe Recommender" component={SuggestAIScreen} />
+      <Drawer.Screen name="Food Snap Recognizer" component={RecognizeFoodScreen} />
+      <Drawer.Screen name="Calorie Count AI" component={RecognizeProduceScreen} />
       <Drawer.Screen
         name={`Logout ${userSession.name}`}
         component={LogoutScreen}

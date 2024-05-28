@@ -3,7 +3,7 @@
 ChefConnect is a mobile recipe-sharing app built with React Native, MongoDB, Express, Node.js, and Tailwind CSS. It allows users to discover, save, and share recipes securely. Additionally, it incorporates AI-powered features for calorie counting, food recognition, and personalized recipe recommendations. This README.md file provides an overview of the project, installation instructions, and usage guidelines.
 
 ## User Interface
-![Alt text](screenshots/1peg)
+![Alt text](screenshots/1.jpeg)
 
 ## Features
 
@@ -17,14 +17,14 @@ ChefConnect is a mobile recipe-sharing app built with React Native, MongoDB, Exp
 
 ## Technologies Used
 
-- #Frontend: React Native
-- #Backend: MongoDB, Express, Node.js
-- #Styling: Tailwind CSS
-- #Authentication: JWT (JSON Web Tokens)
-- #AI Services:
-- Gemini API for recipe recommendations
-- Python Flask server for deploying AI models
-- Keras and TensorFlow for training and loading deep learning models (CNN)
+- Frontend: React Native
+- Backend: MongoDB, Express, Node.js
+- Styling: Tailwind CSS
+- Authentication: JWT (JSON Web Tokens)
+- AI Services:
+  - Gemini API for recipe recommendations
+  - Python Flask server for deploying AI models
+  - Keras and TensorFlow for training and loading deep learning models (CNN)
 
 ## Installation
 

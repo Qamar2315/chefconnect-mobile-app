@@ -3,7 +3,7 @@ import { View, StyleSheet, Image } from "react-native";
 import { Button, Text, Provider, ActivityIndicator } from "react-native-paper";
 import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
-import { BASE_URL } from "../../config";
+import { BASE_URL_FLASK } from "../../config";
 import { AuthContext } from "../helpers/Auth";
 import { useContext } from "react";
 
@@ -53,12 +53,12 @@ const RecognizeFoodScreen = () => {
       formData.append("image", {
         uri: image,
         type: "image/jpeg",
-        name: "food.jpg",
+        name: "produce.jpg",
       });
 
       try {
         const response = await axios.post(
-          `${BASE_URL}/api/recognize`,
+          `${BASE_URL_FLASK}/api/predict`,
           formData,
           {
             headers: {
@@ -68,7 +68,7 @@ const RecognizeFoodScreen = () => {
           }
         );
         if (response.data.success) {
-          setFoodType(response.data.foodType);
+          setFoodType(response.data.result);
         } else {
           alert("Recognition failed, please try again.");
         }

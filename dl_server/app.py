@@ -8,7 +8,7 @@ from flask_cors import CORS
 from tensorflow.keras.preprocessing import image
 
 app = Flask(__name__)
-CORS(app, origins="192.168.18.29:8081")
+CORS(app, origins="*")
 
 # Load the pre-trained model
 model = load_model('./models/FV.h5')
@@ -115,13 +115,12 @@ def predict():
             return jsonify({'success':False,'error': str(e)}), 200
 
 @app.route('/api/predict', methods=['POST'])
-def predict():    
+def predict_food():    
     print(request.files)
     if 'image' not in request.files:
         return jsonify({'error': 'No file part in the request'}), 400
 
     file = request.files['image']
-
     if file.filename == '':
         return jsonify({'error': 'No file selected for uploading'}), 400
 
@@ -130,19 +129,15 @@ def predict():
             filename = file.filename
             file_path = os.path.join('./uploads', filename)
             file.save(file_path)
-
             result = processed_img(file_path)
-            os.remove(file_path)  # Clean up the saved file
+            # os.remove(file_path)  # Clean up the saved file
             img=image.load_img(file_path,target_size=(64,64)) #load and reshaping the image
             x=image.img_to_array(img)#converting image to array
             x=np.expand_dims(x,axis=0)#changing the dimensions of the image
 
-            pred = model.predict(x)  # predicting classes
-            print(pred)  # printing the prediction
+            pred = model_new.predict(x)  # predicting classes
             index = ['French Fries', 'Pizza', 'Samosa']
             result = str(index[pred.argmax()])
-            print(result)
-
             response = {
                 'success': True,
                 'result': result
@@ -150,6 +145,7 @@ def predict():
 
             return jsonify(response)
         except Exception as e:
+            print(str(e))
             return jsonify({'success':False,'error': str(e)}), 200
 
 
